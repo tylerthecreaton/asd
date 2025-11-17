@@ -184,4 +184,25 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get viewDetailedReport => 'ดูรายงานโดยละเอียด';
+
+  @override
+  String get startQuestionnaire => 'เริ่มทำแบบสอบถาม';
+
+  @override
+  String get backToHome => 'กลับสู่หน้าแรก';
+
+  @override
+  String get questionnaireIntroTitle => 'แบบสอบถาม M-CHAT';
+
+  @override
+  String get questionnaireIntroDescription => 'แบบสอบถาม Modified Checklist for Autism in Toddlers (M-CHAT) ช่วยคัดกรองอาการแสดงออทิสติกในเด็กในช่วงแรกเริ่น';
+
+  @override
+  String get instruction1 => 'ตอบคำถามเกี่ยวกับพฤติกรรมปกติของบุตรหลานของคุณ';
+
+  @override
+  String get instruction2 => 'เลือกตัวเลือกที่อธิบายพฤติกรรมของบุตรหลานของคุณในส่วนใหญ่';
+
+  @override
+  String get instruction3 => 'หากคุณต้องการออกจากแบบสอบถาม ความคืบหน้าจะถูกบันทึกไว้สำหรับเซสชันนี้';
 }

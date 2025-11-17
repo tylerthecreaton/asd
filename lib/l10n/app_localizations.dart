@@ -448,6 +448,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Detailed Report'**
   String get viewDetailedReport;
+
+  /// No description provided for @startQuestionnaire.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Questionnaire'**
+  String get startQuestionnaire;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @questionnaireIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'M-CHAT Questionnaire'**
+  String get questionnaireIntroTitle;
+
+  /// No description provided for @questionnaireIntroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified Checklist for Autism in Toddlers (M-CHAT) helps screen early ASD indicators.'**
+  String get questionnaireIntroDescription;
+
+  /// No description provided for @instruction1.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer each question about your child\'s typical behavior.'**
+  String get instruction1;
+
+  /// No description provided for @instruction2.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the option that best describes how your child behaves most of the time.'**
+  String get instruction2;
+
+  /// No description provided for @instruction3.
+  ///
+  /// In en, this message translates to:
+  /// **'If you need to leave, your progress is saved for this session.'**
+  String get instruction3;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

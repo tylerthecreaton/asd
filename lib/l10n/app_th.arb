@@ -58,5 +58,12 @@
   "analysisFailedText": "ไม่สามารถวิเคราะห์วิดีโอได้ กรุณาลองใหม่",
   "tryAgain": "ลองใหม่",
   "scheduleConsultation": "นัดหมายการปรึกษาแพทย์",
-  "viewDetailedReport": "ดูรายงานโดยละเอียด"
+  "viewDetailedReport": "ดูรายงานโดยละเอียด",
+  "startQuestionnaire": "เริ่มทำแบบสอบถาม",
+  "backToHome": "กลับสู่หน้าแรก",
+  "questionnaireIntroTitle": "แบบสอบถาม M-CHAT",
+  "questionnaireIntroDescription": "แบบสอบถาม Modified Checklist for Autism in Toddlers (M-CHAT) ช่วยคัดกรองอาการแสดงออทิสติกในเด็กในช่วงแรกเริ่ม",
+  "instruction1": "ตอบคำถามเกี่ยวกับพฤติกรรมปกติของบุตรหลานของคุณ",
+  "instruction2": "เลือกตัวเลือกที่อธิบายพฤติกรรมของบุตรหลานของคุณในส่วนใหญ่",
+  "instruction3": "หากคุณต้องการออกจากแบบสอบถาม ความคืบหน้าจะถูกบันทึกไว้สำหรับเซสชันนี้"
 }

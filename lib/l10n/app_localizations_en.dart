@@ -184,4 +184,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewDetailedReport => 'View Detailed Report';
+
+  @override
+  String get startQuestionnaire => 'Start Questionnaire';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get questionnaireIntroTitle => 'M-CHAT Questionnaire';
+
+  @override
+  String get questionnaireIntroDescription => 'Modified Checklist for Autism in Toddlers (M-CHAT) helps screen early ASD indicators.';
+
+  @override
+  String get instruction1 => 'Answer each question about your child\'s typical behavior.';
+
+  @override
+  String get instruction2 => 'Select the option that best describes how your child behaves most of the time.';
+
+  @override
+  String get instruction3 => 'If you need to leave, your progress is saved for this session.';
 }

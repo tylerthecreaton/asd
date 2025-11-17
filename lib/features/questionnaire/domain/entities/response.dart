@@ -13,4 +13,20 @@ class Response extends Equatable {
 
   @override
   List<Object?> get props => [questionId, answerIndex, answeredAt];
+  
+  Map<String, dynamic> toJson() {
+    return {
+      'questionId': questionId,
+      'answerIndex': answerIndex,
+      'answeredAt': answeredAt.toIso8601String(),
+    };
+  }
+  
+  factory Response.fromJson(Map<String, dynamic> json) {
+    return Response(
+      questionId: json['questionId'],
+      answerIndex: json['answerIndex'],
+      answeredAt: DateTime.parse(json['answeredAt']),
+    );
+  }
 }

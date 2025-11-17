@@ -54,6 +54,7 @@ dependencies:
   # Utilities
   url_launcher: ^6.2.1
   intl: ^0.20.2
+  shared_preferences: ^2.2.2
 
   # UI Components
   flutter_svg: ^2.0.9
