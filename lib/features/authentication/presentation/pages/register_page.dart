@@ -84,203 +84,189 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primary.withValues(alpha: 0.05),
-              AppColors.background,
-              AppColors.primary.withValues(alpha: 0.03),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Custom App Bar
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top Bar with Back Button
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey[200]!,
+                        width: 1,
                       ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.textPrimary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
                         ),
-                        onPressed: () => context.pop(),
-                      ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Text(
-                      'สมัครสมาชิก',
-                      style: AppTextStyles.headline3.copyWith(
-                        fontWeight: FontWeight.bold,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
                         color: AppColors.textPrimary,
                       ),
+                      onPressed: () => context.pop(),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    'สมัครสมาชิก',
+                    style: AppTextStyles.headline3.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
               ),
+            ),
 
-              // Scrollable Content
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 500),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const SizedBox(height: 8),
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 8),
 
-                              // Icon/Avatar
-                              Center(
-                                child: Hero(
-                                  tag: 'register_icon',
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          AppColors.primary,
-                                          AppColors.primary.withValues(
-                                            alpha: 0.7,
-                                          ),
-                                        ],
-                                      ),
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppColors.primary.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 10),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(
-                                      Icons.person_add,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ),
+                        // Icon/Avatar
+                        Center(
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppColors.primary,
+                                  AppColors.primary.withValues(alpha: 0.7),
+                                ],
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.3,
                                   ),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
                                 ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.person_add,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Header
+                        Text(
+                          'สร้างบัญชีใหม่',
+                          style: AppTextStyles.headline1.copyWith(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          'กรอกข้อมูลของคุณเพื่อเริ่มต้นใช้งาน',
+                          style: AppTextStyles.bodyText1.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // Full Name Field
+                        AuthTextField(
+                          controller: _fullNameController,
+                          label: 'ชื่อ-นามสกุล',
+                          hint: 'กรอกชื่อ-นามสกุลของคุณ',
+                          keyboardType: TextInputType.name,
+                          prefixIcon: const Icon(Icons.person_outline),
+                          validator: (value) => Validators.validateName(
+                            value,
+                            fieldName: 'ชื่อ-นามสกุล',
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Email Field
+                        AuthTextField(
+                          controller: _emailController,
+                          label: 'อีเมล',
+                          hint: 'กรอกอีเมลของคุณ',
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          validator: Validators.validateEmail,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Phone Field (Optional)
+                        AuthTextField(
+                          controller: _phoneController,
+                          label: 'เบอร์โทรศัพท์ (ไม่บังคับ)',
+                          hint: 'กรอกเบอร์โทรศัพท์ของคุณ',
+                          keyboardType: TextInputType.phone,
+                          prefixIcon: const Icon(Icons.phone_outlined),
+                          validator: Validators.validatePhoneNumber,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Password Field
+                        AuthTextField(
+                          controller: _passwordController,
+                          label: 'รหัสผ่าน',
+                          hint: 'สร้างรหัสผ่าน (อย่างน้อย 8 ตัวอักษร)',
+                          obscureText: true,
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          validator: Validators.validatePassword,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Confirm Password Field
+                        AuthTextField(
+                          controller: _confirmPasswordController,
+                          label: 'ยืนยันรหัสผ่าน',
+                          hint: 'กรอกรหัสผ่านอีกครั้ง',
+                          obscureText: true,
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          validator: (value) =>
+                              Validators.validateConfirmPassword(
+                                value,
+                                _passwordController.text,
                               ),
+                        ),
 
-                              const SizedBox(height: 24),
-
-                              // Header
-                              Text(
-                                'สร้างบัญชีใหม่',
-                                style: AppTextStyles.headline1.copyWith(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              const SizedBox(height: 8),
-
-                              Text(
-                                'กรอกข้อมูลของคุณเพื่อเริ่มต้นใช้งาน',
-                                style: AppTextStyles.bodyText1.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 15,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              const SizedBox(height: 32),
-
-                              // Full Name Field
-                              AuthTextField(
-                                controller: _fullNameController,
-                                label: 'ชื่อ-นามสกุล',
-                                hint: 'กรอกชื่อ-นามสกุลของคุณ',
-                                keyboardType: TextInputType.name,
-                                prefixIcon: const Icon(Icons.person_outline),
-                                validator: (value) => Validators.validateName(
-                                  value,
-                                  fieldName: 'ชื่อ-นามสกุล',
-                                ),
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Email Field
-                              AuthTextField(
-                                controller: _emailController,
-                                label: 'อีเมล',
-                                hint: 'กรอกอีเมลของคุณ',
-                                keyboardType: TextInputType.emailAddress,
-                                prefixIcon: const Icon(Icons.email_outlined),
-                                validator: Validators.validateEmail,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Phone Field (Optional)
-                              AuthTextField(
-                                controller: _phoneController,
-                                label: 'เบอร์โทรศัพท์ (ไม่บังคับ)',
-                                hint: 'กรอกเบอร์โทรศัพท์ของคุณ',
-                                keyboardType: TextInputType.phone,
-                                prefixIcon: const Icon(Icons.phone_outlined),
-                                validator: Validators.validatePhoneNumber,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Password Field
-                              AuthTextField(
-                                controller: _passwordController,
-                                label: 'รหัสผ่าน',
-                                hint: 'สร้างรหัสผ่าน (อย่างน้อย 8 ตัวอักษร)',
-                                obscureText: true,
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                validator: Validators.validatePassword,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Confirm Password Field
-                              AuthTextField(
-                                controller: _confirmPasswordController,
-                                label: 'ยืนยันรหัสผ่าน',
-                                hint: 'กรอกรหัสผ่านอีกครั้ง',
-                                obscureText: true,
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                validator: (value) =>
-                                    Validators.validateConfirmPassword(
-                                      value,
-                                      _passwordController.text,
-                                    ),
-                              ),
-
-                              const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
                               // Terms and Conditions Checkbox
                               Container(
@@ -332,42 +318,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                           padding: const EdgeInsets.only(
                                             top: 2,
                                           ),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: AppTextStyles.bodyText2
-                                                  .copyWith(height: 1.5),
-                                              children: [
-                                                const TextSpan(
-                                                  text: 'ฉันยอมรับ ',
-                                                ),
-                                                TextSpan(
-                                                  text: 'เงื่อนไขการใช้งาน',
-                                                  style: AppTextStyles.bodyText2
-                                                      .copyWith(
-                                                        color:
-                                                            AppColors.primary,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                      ),
-                                                ),
-                                                const TextSpan(text: ' และ '),
-                                                TextSpan(
-                                                  text: 'นโยบายความเป็นส่วนตัว',
-                                                  style: AppTextStyles.bodyText2
-                                                      .copyWith(
-                                                        color:
-                                                            AppColors.primary,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                      ),
-                                                ),
-                                              ],
+                                          child: Text(
+                                            'ฉันยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว',
+                                            style: AppTextStyles.bodyText2.copyWith(
+                                              color: AppColors.textSecondary,
+                                              height: 1.4,
+                                              fontSize: 13,
                                             ),
                                           ),
                                         ),
@@ -377,7 +333,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 ),
                               ),
 
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 20),
 
                               // Register Button
                               AuthButton(
@@ -386,116 +342,51 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 isLoading: authState.isLoading,
                               ),
 
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 20),
 
-                              // Divider
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 1,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.transparent,
-                                            AppColors.textDisabled.withValues(
-                                              alpha: 0.3,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    child: Text(
-                                      'หรือ',
-                                      style: AppTextStyles.bodyText2.copyWith(
-                                        color: AppColors.textSecondary,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      height: 1,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            AppColors.textDisabled.withValues(
-                                              alpha: 0.3,
-                                            ),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              // Login Link
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: AppColors.textDisabled.withValues(
-                                      alpha: 0.2,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'มีบัญชีอยู่แล้ว? ',
-                                      style: AppTextStyles.bodyText1.copyWith(
-                                        color: AppColors.textSecondary,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        context.pop();
-                                      },
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                        ),
-                                        minimumSize: const Size(0, 0),
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      child: Text(
-                                        'เข้าสู่ระบบ',
-                                        style: AppTextStyles.bodyText1.copyWith(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                        // Login Link
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'มีบัญชีอยู่แล้ว? ',
+                                style: AppTextStyles.bodyText1.copyWith(
+                                  color: Colors.grey[600],
                                 ),
                               ),
-
-                              const SizedBox(height: 40),
+                              TextButton(
+                                onPressed: () {
+                                  context.pop();
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  minimumSize: const Size(0, 0),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: Text(
+                                  'เข้าสู่ระบบ',
+                                  style: AppTextStyles.bodyText1.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ),
+
+                        const SizedBox(height: 40),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

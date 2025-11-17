@@ -1,10 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/user.dart';
+import '../../domain/repositories/auth_repository.dart';
 import 'auth_state.dart';
+import 'auth_dependencies.dart';
 
 /// Authentication provider
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(const AuthState());
+  AuthNotifier(this._authRepository) : super(const AuthState());
+
+  final AuthRepository _authRepository;
 
   // Mock users database (กำหนดไว้ล่วงหน้า)
   static const Map<String, Map<String, String>> _mockUsers = {
@@ -128,12 +132,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      // TODO: Implement actual logout with Supabase
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      state = const AuthState();
+      final result = await _authRepository.signOut();
+      
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: failure.message,
+          );
+        },
+        (_) {
+          state = const AuthState();
+        },
+      );
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      );
     }
   }
 
@@ -145,5 +161,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
 /// Provider for authentication
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier();
+  final authRepository = ref.watch(authRepositoryProvider);
+  return AuthNotifier(authRepository);
 });
