@@ -54,23 +54,16 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.2),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
-    
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.2), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
+
     _fadeController.forward();
     _slideController.forward();
   }
@@ -93,13 +86,13 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     try {
       const storage = FlutterSecureStorage();
       final questionnaireState = ref.read(questionnaireProvider);
-      
+
       if (questionnaireState is AsyncData) {
         final state = questionnaireState.value;
         if (state != null && state.questionnaire != null) {
           final questionnaireId = state.questionnaire!.id;
           final responsesJson = state.responses.map((r) => r.toJson()).toList();
-          
+
           await storage.write(
             key: 'questionnaire_$questionnaireId',
             value: jsonEncode(responsesJson),
@@ -112,12 +105,12 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
             key: 'questionnaire_${questionnaireId}_time',
             value: _secondsElapsed.toString(),
           );
-          
+
           if (mounted) {
             setState(() {
               _showAutoSaveIndicator = true;
             });
-            
+
             // Hide auto-save indicator after 2 seconds
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
@@ -139,22 +132,26 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     try {
       const storage = FlutterSecureStorage();
       final questionnaireState = ref.read(questionnaireProvider);
-      
+
       if (questionnaireState is AsyncData) {
         final state = questionnaireState.value;
         if (state != null && state.questionnaire != null) {
           final questionnaireId = state.questionnaire!.id;
-          final savedPageStr = await storage.read(key: 'questionnaire_${questionnaireId}_page');
-          final savedTimeStr = await storage.read(key: 'questionnaire_${questionnaireId}_time');
-          
+          final savedPageStr = await storage.read(
+            key: 'questionnaire_${questionnaireId}_page',
+          );
+          final savedTimeStr = await storage.read(
+            key: 'questionnaire_${questionnaireId}_time',
+          );
+
           if (savedPageStr != null && savedTimeStr != null) {
             final savedPage = int.tryParse(savedPageStr) ?? 0;
             final savedTime = int.tryParse(savedTimeStr) ?? 0;
-            
+
             setState(() {
               _secondsElapsed = savedTime;
             });
-            
+
             // We'll restore the page after a short delay to ensure everything is loaded
             Future.delayed(const Duration(milliseconds: 500), () {
               if (mounted && savedPage > 0) {
@@ -194,7 +191,11 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     super.dispose();
   }
 
-  void _nextPage(int totalQuestions, List<response_entity.Response> responses, Questionnaire questionnaire) {
+  void _nextPage(
+    int totalQuestions,
+    List<response_entity.Response> responses,
+    Questionnaire questionnaire,
+  ) {
     if (!_canProceed(questionnaire, _currentPage, responses)) {
       setState(() {
         _showValidationMessage = true;
@@ -209,11 +210,11 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
       });
       return;
     }
-    
+
     setState(() {
       _showValidationMessage = false;
     });
-    
+
     if (_currentPage < totalQuestions - 1) {
       _fadeController.reverse().then((_) {
         _pageController.nextPage(
@@ -288,7 +289,10 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                   Navigator.of(context).pop();
                 },
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -306,7 +310,10 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -379,12 +386,15 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                 currentQuestion: _currentPage + 1,
                 totalQuestions: questions.length,
               ),
-              
+
               // Validation message
               if (_showValidationMessage)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.red.shade50,
@@ -393,8 +403,11 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.warning_amber_outlined,
-                           color: Colors.red.shade600, size: 20),
+                      Icon(
+                        Icons.warning_amber_outlined,
+                        color: Colors.red.shade600,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -408,7 +421,7 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                     ],
                   ),
                 ),
-              
+
               // PageView for questions with animation
               Expanded(
                 child: FadeTransition(
@@ -478,8 +491,11 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.celebration_outlined,
-                             color: Colors.green.shade600, size: 20),
+                        Icon(
+                          Icons.celebration_outlined,
+                          color: Colors.green.shade600,
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -494,7 +510,7 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                       ],
                     ),
                   ),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -505,8 +521,11 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                       icon: const Icon(Icons.arrow_back, size: 18),
                     ),
                     CustomButton(
-                      text: _currentPage < questions.length - 1 ? 'ถัดไป' : 'ส่งคำตอบ',
-                      onPressed: () => _nextPage(questions.length, responses, questionnaire),
+                      text: _currentPage < questions.length - 1
+                          ? 'ถัดไป'
+                          : 'ส่งคำตอบ',
+                      onPressed: () =>
+                          _nextPage(questions.length, responses, questionnaire),
                       icon: _currentPage < questions.length - 1
                           ? const Icon(Icons.arrow_forward, size: 18)
                           : const Icon(Icons.check_circle, size: 18),
