@@ -25,3 +25,29 @@ flutter test
 ```
 
 > Note: The current `file_picker` dependency emits platform plugin warnings on Windows, macOS, and Linux during the commands above. They are upstream notices and do not block analysis or tests.
+
+## Backend API (Node.js + Prisma)
+
+The `server/` folder now contains an Express + Prisma backend that exposes authentication, questionnaire, and assessment-result endpoints backed by a SQLite database.
+
+1. Install dependencies and copy the environment template:
+
+   ```powershell
+   cd server
+   copy .env.example .env
+   npm install
+   ```
+
+2. Run the initial migration (creates/updates the SQLite database and seeds questionnaires):
+
+   ```powershell
+   npx prisma migrate dev --name init
+   ```
+
+3. Start the API locally:
+
+   ```powershell
+   npm run dev
+   ```
+
+See `server/README.md` for endpoint details, available scripts, and architectural notes.

@@ -1,0 +1,77 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id           String   @id @default(cuid())
+    email        String   @unique
+    name         String?
+    passwordHash String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    results AssessmentResult[]
+}
+
+model Questionnaire {
+    id           String   @id @default(cuid())
+    slug         String   @unique
+    title        String
+    description  String
+    passingScore Int
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    questions Question[]
+    results   AssessmentResult[]
+}
+
+model Question {
+    id                 String        @id @default(cuid())
+    questionnaire      Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
+    questionnaireId    String
+    externalId         String
+    text               String
+    description        String?
+    optionsJson        String
+    correctAnswerIndex Int
+    displayOrder       Int
+    createdAt          DateTime      @default(now())
+    updatedAt          DateTime      @updatedAt
+
+    answers Response[]
+
+    @@unique([questionnaireId, externalId])
+}
+
+model AssessmentResult {
+    id                   String        @id @default(cuid())
+    questionnaire        Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
+    questionnaireId      String
+    user                 User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+    userId               String?
+    score                Int
+    totalQuestions       Int
+    riskLevel            String
+    flaggedBehaviorsJson String
+    recommendationsJson  String
+    createdAt            DateTime      @default(now())
+    updatedAt            DateTime      @updatedAt
+
+    answers Response[]
+}
+
+model Response {
+    id            String           @id @default(cuid())
+    result        AssessmentResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+    resultId      String
+    question      Question         @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId    String
+    selectedIndex Int
+    createdAt     DateTime         @default(now())
+}
