@@ -15,14 +15,26 @@ export const errorHandler = (
 ) => {
   console.error(err);
 
+  // Zod validation errors
   if (err instanceof ZodError) {
+    const firstError = err.errors[0];
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "Validation error",
+      message: firstError.message || "Validation error",
+      field: firstError.path.join("."),
       issues: err.errors,
     });
   }
 
+  // Prisma errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    // Unique constraint violation
+    if (err.code === "P2002") {
+      return res.status(StatusCodes.CONFLICT).json({
+        message: "Email is already registered",
+        error: "EMAIL_EXISTS",
+      });
+    }
+
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: err.message,
       code: err.code,

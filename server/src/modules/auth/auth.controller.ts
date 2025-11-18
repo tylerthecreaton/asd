@@ -22,25 +22,30 @@ export const register = async (
   try {
     const payload = registerSchema.parse(req.body);
 
+    // Check if email already exists
     const existing = await prisma.user.findUnique({
       where: { email: payload.email },
     });
     if (existing) {
-      return res
-        .status(StatusCodes.CONFLICT)
-        .json({ message: "Email is already registered" });
+      return res.status(StatusCodes.CONFLICT).json({
+        message: "Email is already registered",
+        error: "EMAIL_EXISTS",
+      });
     }
 
+    // Hash password
     const passwordHash = await hashPassword(payload.password);
 
+    // Create user
     const user = await prisma.user.create({
       data: {
-        email: payload.email,
-        name: payload.name,
+        email: payload.email.toLowerCase().trim(),
+        name: payload.name?.trim() || null,
         passwordHash,
       },
     });
 
+    // Generate token
     const token = generateAccessToken(user.id);
 
     res.status(StatusCodes.CREATED).json({

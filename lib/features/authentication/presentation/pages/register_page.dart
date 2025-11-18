@@ -26,6 +26,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _confirmPasswordController = TextEditingController();
 
   bool _acceptTerms = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
@@ -49,6 +51,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       final phone = _phoneController.text.trim();
       final password = _passwordController.text;
 
+      // Clear previous error
+      ref.read(authProvider.notifier).clearError();
+
       await ref
           .read(authProvider.notifier)
           .register(
@@ -61,6 +66,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       if (mounted) {
         final authState = ref.read(authProvider);
         if (authState.isAuthenticated) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('สมัครสมาชิกสำเร็จ!'),
+              backgroundColor: AppColors.success,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
           context.go(RouteConstants.home);
         } else if (authState.errorMessage != null) {
           _showErrorSnackBar(authState.errorMessage!);
@@ -424,8 +437,21 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                   controller: _passwordController,
                                   label: 'รหัสผ่าน',
                                   hint: 'สร้างรหัสผ่าน (อย่างน้อย 8 ตัวอักษร)',
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   prefixIcon: const Icon(Icons.lock_outline),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      color: Colors.grey[600],
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscurePassword = !_obscurePassword;
+                                      });
+                                    },
+                                  ),
                                   validator: Validators.validatePassword,
                                 ),
                                 delay: 500,
@@ -438,8 +464,22 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                   controller: _confirmPasswordController,
                                   label: 'ยืนยันรหัสผ่าน',
                                   hint: 'กรอกรหัสผ่านอีกครั้ง',
-                                  obscureText: true,
+                                  obscureText: _obscureConfirmPassword,
                                   prefixIcon: const Icon(Icons.lock_outline),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscureConfirmPassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      color: Colors.grey[600],
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscureConfirmPassword =
+                                            !_obscureConfirmPassword;
+                                      });
+                                    },
+                                  ),
                                   validator: (value) =>
                                       Validators.validateConfirmPassword(
                                         value,

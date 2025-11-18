@@ -11,6 +11,7 @@ class AuthTextField extends StatefulWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final VoidCallback? onToggleObscure;
   final bool enabled;
   final int maxLines;
@@ -24,6 +25,7 @@ class AuthTextField extends StatefulWidget {
     this.obscureText = false,
     this.validator,
     this.prefixIcon,
+    this.suffixIcon,
     this.onToggleObscure,
     this.enabled = true,
     this.maxLines = 1,
@@ -68,19 +70,23 @@ class _AuthTextFieldState extends State<AuthTextField> {
               color: AppColors.textDisabled,
             ),
             prefixIcon: widget.prefixIcon,
-            suffixIcon: widget.obscureText
-                ? IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.textSecondary,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  )
-                : null,
+            suffixIcon:
+                widget.suffixIcon ??
+                (widget.obscureText
+                    ? IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.textSecondary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      )
+                    : null),
             filled: true,
             fillColor: widget.enabled
                 ? AppColors.cardBackground

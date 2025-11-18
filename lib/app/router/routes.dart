@@ -6,7 +6,7 @@ import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/authentication/presentation/pages/register_page.dart';
 import '../../features/common/pages/home_page.dart';
 import '../../features/common/pages/onboarding_page.dart';
-import '../../features/common/pages/profile_page.dart';
+// import '../../features/common/pages/profile_page.dart';
 import '../../features/common/pages/profile_page_new.dart';
 import '../../features/common/pages/edit_profile_page.dart';
 import '../../features/common/pages/settings_page.dart';

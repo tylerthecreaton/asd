@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/text_styles.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../../core/services/providers/preferences_providers.dart';
 import '../../../../core/utils/validators.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_button.dart';
@@ -21,6 +22,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _rememberMe = false;
+  bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load remembered email
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final prefsStorage = ref.read(preferencesStorageProvider);
+      final rememberedEmail = prefsStorage.getRememberedEmail();
+      if (rememberedEmail != null && rememberedEmail.isNotEmpty) {
+        _emailController.text = rememberedEmail;
+        setState(() {
+          _rememberMe = true;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -34,17 +53,47 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
+      // Clear previous error
+      ref.read(authProvider.notifier).clearError();
+
       await ref.read(authProvider.notifier).login(email, password);
 
       if (mounted) {
         final authState = ref.read(authProvider);
         if (authState.isAuthenticated) {
+          // Save or clear remembered email
+          final prefsStorage = ref.read(preferencesStorageProvider);
+          if (_rememberMe) {
+            await prefsStorage.saveRememberedEmail(email);
+          } else {
+            await prefsStorage.clearRememberedEmail();
+          }
+
           context.go(RouteConstants.home);
         } else if (authState.errorMessage != null) {
           _showErrorSnackBar(authState.errorMessage!);
         }
       }
     }
+  }
+
+  void _handleForgotPassword() {
+    // TODO: Implement forgot password flow
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('รีเซ็ตรหัสผ่าน'),
+        content: const Text(
+          'ฟีเจอร์นี้จะพร้อมใช้งานเร็วๆ นี้\nกรุณาติดต่อผู้ดูแลระบบหากต้องการรีเซ็ตรหัสผ่าน',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ตกลง'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showErrorSnackBar(String message) {
@@ -226,9 +275,72 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 controller: _passwordController,
                                 label: 'รหัสผ่าน',
                                 hint: 'กรอกรหัสผ่านของคุณ',
-                                obscureText: true,
+                                obscureText: _obscurePassword,
                                 prefixIcon: const Icon(Icons.lock_outline),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Colors.grey[600],
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                ),
                                 validator: Validators.validatePassword,
+                              ),
+
+                              const SizedBox(height: 8),
+
+                              // Remember Me & Forgot Password
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: Checkbox(
+                                          value: _rememberMe,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _rememberMe = value ?? false;
+                                            });
+                                          },
+                                          activeColor: AppColors.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'จดจำฉันไว้',
+                                        style: AppTextStyles.bodyText2.copyWith(
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  TextButton(
+                                    onPressed: _handleForgotPassword,
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: const Size(0, 0),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: Text(
+                                      'ลืมรหัสผ่าน?',
+                                      style: AppTextStyles.bodyText2.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
 
                               const SizedBox(height: 24),

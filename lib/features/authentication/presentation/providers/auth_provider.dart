@@ -25,10 +25,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     result.fold(
       (failure) {
+        String errorMessage = 'เข้าสู่ระบบไม่สำเร็จ';
+
+        // Parse error message for better user experience
+        if (failure.message.toLowerCase().contains('invalid credentials')) {
+          errorMessage = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+        } else if (failure.message.toLowerCase().contains('network') ||
+            failure.message.toLowerCase().contains('connection')) {
+          errorMessage =
+              'ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้ กรุณาลองใหม่อีกครั้ง';
+        } else if (failure.message.toLowerCase().contains('unauthorized')) {
+          errorMessage = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+        } else if (failure.message.isNotEmpty) {
+          errorMessage = failure.message;
+        }
+
         state = state.copyWith(
           isLoading: false,
           isAuthenticated: false,
-          errorMessage: failure.message,
+          errorMessage: errorMessage,
         );
       },
       (user) {
@@ -67,10 +82,28 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     result.fold(
       (failure) {
+        String errorMessage = 'สมัครสมาชิกไม่สำเร็จ';
+
+        // Parse error message for better user experience
+        if (failure.message.toLowerCase().contains('already registered') ||
+            failure.message.toLowerCase().contains('conflict') ||
+            failure.message.toLowerCase().contains('already exists')) {
+          errorMessage = 'อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น';
+        } else if (failure.message.toLowerCase().contains('network') ||
+            failure.message.toLowerCase().contains('connection')) {
+          errorMessage =
+              'ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้ กรุณาลองใหม่อีกครั้ง';
+        } else if (failure.message.toLowerCase().contains('validation') ||
+            failure.message.toLowerCase().contains('invalid')) {
+          errorMessage = 'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบและลองใหม่อีกครั้ง';
+        } else if (failure.message.isNotEmpty) {
+          errorMessage = failure.message;
+        }
+
         state = state.copyWith(
           isLoading: false,
           isAuthenticated: false,
-          errorMessage: failure.message,
+          errorMessage: errorMessage,
         );
       },
       (user) {
