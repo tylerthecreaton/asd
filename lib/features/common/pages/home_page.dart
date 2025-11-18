@@ -31,12 +31,7 @@ class HomePage extends ConsumerWidget {
                 WelcomeBanner(
                   userName: userName,
                   onProfileTap: () {
-                    // TODO: Navigate to profile
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('ฟีเจอร์กำลังพัฒนา'),
-                      ),
-                    );
+                    context.push(RouteConstants.profile);
                   },
                 ),
 

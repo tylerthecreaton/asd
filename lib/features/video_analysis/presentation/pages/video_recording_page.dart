@@ -234,7 +234,7 @@ class _RecordingInstructions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Recording Instructions',
+            'คำแนะนำการบันทึก',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -243,14 +243,14 @@ class _RecordingInstructions extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Stimulus: ${video.title}\nDuration: ${video.duration} seconds',
+            'สิ่งเร้า: ${video.title}\nระยะเวลา: ${video.duration} วินาที',
             style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 12),
           const Text(
-            '1. Frame the child with face and torso visible\n'
-            '2. Ensure calm environment with good lighting\n'
-            '3. Press record when ready, then follow on-screen prompt',
+            '1. จัดเฟรมเด็กให้เห็นใบหน้าและลำตัว\n'
+            '2. ตรวจสอบให้แน่ใจว่าสภาพแวดล้อมเงียบสงบและมีแสงสว่างที่ดี\n'
+            '3. กดบันทึกเมื่อพร้อม จากนั้นทำตามคำแนะนำบนหน้าจอ',
             style: TextStyle(color: Colors.white70),
           ),
         ],

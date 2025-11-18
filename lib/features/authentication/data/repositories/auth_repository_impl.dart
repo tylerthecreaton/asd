@@ -24,11 +24,11 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       } on ServerException catch (e) {
         return Left(
-          ServerFailure(message: e.message ?? 'Authentication failed'),
+          ServerFailure(e.message ?? 'Authentication failed'),
         );
       }
     }
-    return const Left(NetworkFailure(message: 'No internet connection'));
+    return Left(NetworkFailure('No internet connection'));
   }
 
   @override
@@ -42,10 +42,10 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = await remoteDataSource.signUp(email, password, name);
         return Right(user);
       } on ServerException catch (e) {
-        return Left(ServerFailure(message: e.message ?? 'Registration failed'));
+        return Left(ServerFailure(e.message ?? 'Registration failed'));
       }
     }
-    return const Left(NetworkFailure(message: 'No internet connection'));
+    return Left(NetworkFailure('No internet connection'));
   }
 
   @override
@@ -55,10 +55,10 @@ class AuthRepositoryImpl implements AuthRepository {
         await remoteDataSource.signOut();
         return const Right(null);
       } on ServerException catch (e) {
-        return Left(ServerFailure(message: e.message ?? 'Failed to sign out'));
+        return Left(ServerFailure(e.message ?? 'Failed to sign out'));
       }
     }
-    return const Left(NetworkFailure(message: 'No internet connection'));
+    return Left(NetworkFailure('No internet connection'));
   }
 
   @override
@@ -69,11 +69,11 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Right(null);
       } on ServerException catch (e) {
         return Left(
-          ServerFailure(message: e.message ?? 'Failed to reset password'),
+          ServerFailure(e.message ?? 'Failed to reset password'),
         );
       }
     }
-    return const Left(NetworkFailure(message: 'No internet connection'));
+    return Left(NetworkFailure('No internet connection'));
   }
 
   @override
@@ -83,7 +83,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(user);
     } on ServerException catch (e) {
       return Left(
-        ServerFailure(message: e.message ?? 'Failed to get current user'),
+        ServerFailure(e.message ?? 'Failed to get current user'),
       );
     }
   }

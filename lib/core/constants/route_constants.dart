@@ -13,5 +13,6 @@ class RouteConstants {
   static const String videoPreview = '/video-analysis/preview';
   static const String videoAnalysisResults = '/video-analysis/results';
   static const String profile = '/profile';
+  static const String editProfile = '/profile/edit';
   static const String settings = '/settings';
 }

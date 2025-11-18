@@ -7,6 +7,8 @@ import '../../features/authentication/presentation/pages/register_page.dart';
 import '../../features/common/pages/home_page.dart';
 import '../../features/common/pages/onboarding_page.dart';
 import '../../features/common/pages/profile_page.dart';
+import '../../features/common/pages/profile_page_new.dart';
+import '../../features/common/pages/edit_profile_page.dart';
 import '../../features/common/pages/settings_page.dart';
 import '../../features/common/pages/splash_page.dart';
 import '../../features/questionnaire/presentation/pages/questionnaire_intro_page.dart';
@@ -46,7 +48,12 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: RouteConstants.profile,
     name: 'profile',
-    builder: (context, state) => const ProfilePage(),
+    builder: (context, state) => const ProfilePageNew(),
+  ),
+  GoRoute(
+    path: RouteConstants.editProfile,
+    name: 'editProfile',
+    builder: (context, state) => const EditProfilePage(),
   ),
   GoRoute(
     path: RouteConstants.settings,

@@ -135,6 +135,12 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
 
       if (questionnaireState is AsyncData) {
         final state = questionnaireState.value;
+        if (state != null &&
+            state.questionnaire != null &&
+            state.responses.isEmpty) {
+          // If responses are empty (fresh start), don't load saved progress
+          return;
+        }
         if (state != null && state.questionnaire != null) {
           final questionnaireId = state.questionnaire!.id;
           final savedPageStr = await storage.read(
