@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:asd/core/errors/failures.dart';
-import 'package:asd/features/authentication/domain/entities/user.dart';
+// import 'package:asd/features/authentication/domain/entities/user.dart';
 import 'package:asd/features/common/domain/entities/profile_data.dart';
 import 'package:asd/features/common/domain/repositories/profile_repository.dart';
 import 'package:asd/features/common/data/repositories/profile_repository_impl.dart';

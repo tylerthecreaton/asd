@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:asd/features/authentication/domain/entities/user.dart';
-import 'package:asd/features/questionnaire/domain/entities/assessment_result.dart';
+// import 'package:asd/features/questionnaire/domain/entities/assessment_result.dart';
 
 enum RiskLevel { low, medium, high }
 
