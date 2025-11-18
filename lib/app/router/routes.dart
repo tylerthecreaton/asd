@@ -11,6 +11,7 @@ import '../../features/common/pages/profile_page_new.dart';
 import '../../features/common/pages/edit_profile_page.dart';
 import '../../features/common/pages/settings_page.dart';
 import '../../features/common/pages/splash_page.dart';
+import '../../features/questionnaire/domain/entities/assessment_result.dart';
 import '../../features/questionnaire/presentation/pages/questionnaire_intro_page.dart';
 import '../../features/questionnaire/presentation/pages/questionnaire_page.dart';
 import '../../features/questionnaire/presentation/pages/results_page.dart';
@@ -73,7 +74,10 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: RouteConstants.questionnaireResults,
     name: 'questionnaireResults',
-    builder: (context, state) => const QuestionnaireResultsPage(),
+    builder: (context, state) {
+      final result = state.extra as AssessmentResult?;
+      return QuestionnaireResultsPage(initialResult: result);
+    },
   ),
   GoRoute(
     path: RouteConstants.videoAnalysisIntro,

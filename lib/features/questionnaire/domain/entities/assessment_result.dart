@@ -6,6 +6,8 @@ class AssessmentResult extends Equatable {
   const AssessmentResult({
     required this.id,
     required this.questionnaireId,
+    this.questionnaireSlug,
+    this.questionnaireTitle,
     required this.userId,
     required this.score,
     required this.totalQuestions,
@@ -17,6 +19,8 @@ class AssessmentResult extends Equatable {
 
   final String id;
   final String questionnaireId;
+  final String? questionnaireSlug;
+  final String? questionnaireTitle;
   final String userId;
   final int score;
   final int totalQuestions;
@@ -29,6 +33,8 @@ class AssessmentResult extends Equatable {
   List<Object?> get props => [
     id,
     questionnaireId,
+    questionnaireSlug,
+    questionnaireTitle,
     userId,
     score,
     totalQuestions,

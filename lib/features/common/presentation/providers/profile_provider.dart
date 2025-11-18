@@ -1,17 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:asd/core/errors/failures.dart';
-// import 'package:asd/features/authentication/domain/entities/user.dart';
 import 'package:asd/features/common/domain/entities/profile_data.dart';
 import 'package:asd/features/common/domain/repositories/profile_repository.dart';
-import 'package:asd/features/common/data/repositories/profile_repository_impl.dart';
+import 'package:asd/features/common/data/providers/profile_dependencies.dart';
 
-enum ProfileStatus {
-  initial,
-  loading,
-  loaded,
-  updating,
-  error,
-}
+enum ProfileStatus { initial, loading, loaded, updating, error }
 
 class ProfileState {
   final ProfileStatus status;
@@ -56,19 +49,19 @@ class ProfileState {
       data.hashCode ^
       errorMessage.hashCode ^
       failure.hashCode;
-
 }
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
   final ProfileRepository _repository;
 
-  ProfileNotifier(this._repository) : super(const ProfileState(status: ProfileStatus.initial));
+  ProfileNotifier(this._repository)
+    : super(const ProfileState(status: ProfileStatus.initial));
 
   Future<void> loadProfile() async {
     state = state.copyWith(status: ProfileStatus.loading);
-    
+
     final result = await _repository.getProfileData();
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -89,17 +82,14 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     UserPreferences? preferences,
   }) async {
     state = state.copyWith(status: ProfileStatus.updating);
-    
+
     final currentData = state.data;
     if (currentData == null) return;
-    
-    final updatedUser = currentData.user.copyWith(
-      name: name,
-      email: email,
-    );
-    
+
+    final updatedUser = currentData.user.copyWith(name: name, email: email);
+
     final updatedPreferences = preferences ?? currentData.preferences;
-    
+
     final updatedProfileData = ProfileData(
       user: updatedUser,
       statistics: currentData.statistics,
@@ -107,9 +97,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       children: currentData.children,
       preferences: updatedPreferences,
     );
-    
+
     final result = await _repository.updateProfileData(updatedProfileData);
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -125,9 +115,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> uploadProfileImage(String imagePath) async {
     state = state.copyWith(status: ProfileStatus.updating);
-    
+
     final result = await _repository.uploadProfileImage(imagePath);
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -145,9 +135,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> addChild(ChildProfile child) async {
     state = state.copyWith(status: ProfileStatus.updating);
-    
+
     final result = await _repository.addChild(child);
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -165,7 +155,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
             children: updatedChildren,
             preferences: currentData.preferences,
           );
-          
+
           state = state.copyWith(
             status: ProfileStatus.loaded,
             data: updatedProfileData,
@@ -177,9 +167,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> updateChild(ChildProfile child) async {
     state = state.copyWith(status: ProfileStatus.updating);
-    
+
     final result = await _repository.updateChild(child);
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -199,7 +189,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
             children: updatedChildren,
             preferences: currentData.preferences,
           );
-          
+
           state = state.copyWith(
             status: ProfileStatus.loaded,
             data: updatedProfileData,
@@ -211,9 +201,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> deleteChild(String childId) async {
     state = state.copyWith(status: ProfileStatus.updating);
-    
+
     final result = await _repository.deleteChild(childId);
-    
+
     result.fold(
       (failure) => state = state.copyWith(
         status: ProfileStatus.error,
@@ -233,7 +223,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
             children: updatedChildren,
             preferences: currentData.preferences,
           );
-          
+
           state = state.copyWith(
             status: ProfileStatus.loaded,
             data: updatedProfileData,
@@ -273,12 +263,10 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   }
 }
 
-// Provider instances
-final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
-  return ProfileRepositoryImpl();
-});
-
-final profileProvider = StateNotifierProvider<ProfileNotifier, ProfileState>((ref) {
+// Provider instances - now using centralized dependencies
+final profileProvider = StateNotifierProvider<ProfileNotifier, ProfileState>((
+  ref,
+) {
   final repository = ref.watch(profileRepositoryProvider);
   return ProfileNotifier(repository);
 });

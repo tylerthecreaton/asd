@@ -1,103 +1,99 @@
-import 'package:asd/core/errors/exceptions.dart';
-import 'package:asd/features/authentication/data/models/user_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import 'package:dio/dio.dart';
+
+import '../../../../core/constants/api_constants.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/api_client.dart';
+import '../models/auth_response_model.dart';
+import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserModel> signIn(String email, String password);
-  Future<UserModel> signUp(String email, String password, String? name);
-  Future<void> signOut();
-  Future<void> resetPassword(String email);
-  Future<UserModel?> getCurrentUser();
-  Stream<UserModel?> get authStateChanges;
+  Future<AuthResponseModel> signIn(String email, String password);
+  Future<AuthResponseModel> signUp(String email, String password, String? name);
+  Future<UserModel> getCurrentUser();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final supabase.SupabaseClient _client;
+  AuthRemoteDataSourceImpl(this._apiClient);
 
-  AuthRemoteDataSourceImpl(this._client);
+  final ApiClient _apiClient;
 
   @override
-  Future<UserModel> signIn(String email, String password) async {
+  Future<AuthResponseModel> signIn(String email, String password) async {
     try {
-      final response = await _client.auth.signInWithPassword(
-        email: email,
-        password: password,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.authLoginPath,
+        data: {'email': email, 'password': password},
       );
 
-      final user = response.user;
-      if (user == null) {
-        throw const ServerException(message: 'Failed to sign in');
+      final data = response.data;
+      if (data == null) {
+        throw const ServerException(message: 'Empty response from /auth/login');
       }
-
-      return UserModel.fromSupabaseUser(user);
-    } on supabase.AuthException catch (e) {
-      throw ServerException(message: e.message);
-    } catch (e) {
+      return AuthResponseModel.fromJson(data);
+    } on DioException catch (error) {
+      throw ServerException(message: _resolveErrorMessage(error));
+    } catch (error) {
       throw const ServerException(message: 'Unexpected error during sign in');
     }
   }
 
   @override
-  Future<UserModel> signUp(String email, String password, String? name) async {
+  Future<AuthResponseModel> signUp(
+    String email,
+    String password,
+    String? name,
+  ) async {
     try {
-      final response = await _client.auth.signUp(
-        email: email,
-        password: password,
-        data: name != null ? {'name': name} : null,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.authRegisterPath,
+        data: {
+          'email': email,
+          'password': password,
+          if (name != null && name.isNotEmpty) 'name': name,
+        },
       );
 
-      final user = response.user;
-      if (user == null) {
-        throw const ServerException(message: 'Failed to sign up');
+      final data = response.data;
+      if (data == null) {
+        throw const ServerException(
+          message: 'Empty response from /auth/register',
+        );
       }
-
-      return UserModel.fromSupabaseUser(user);
-    } on supabase.AuthException catch (e) {
-      throw ServerException(message: e.message);
-    } catch (e) {
+      return AuthResponseModel.fromJson(data);
+    } on DioException catch (error) {
+      throw ServerException(message: _resolveErrorMessage(error));
+    } catch (error) {
       throw const ServerException(message: 'Unexpected error during sign up');
     }
   }
 
   @override
-  Future<void> signOut() async {
+  Future<UserModel> getCurrentUser() async {
     try {
-      await _client.auth.signOut();
-    } on supabase.AuthException catch (e) {
-      throw ServerException(message: e.message);
-    } catch (e) {
-      throw const ServerException(message: 'Unexpected error during sign out');
-    }
-  }
-
-  @override
-  Future<void> resetPassword(String email) async {
-    try {
-      await _client.auth.resetPasswordForEmail(email);
-    } on supabase.AuthException catch (e) {
-      throw ServerException(message: e.message);
-    } catch (e) {
-      throw const ServerException(
-        message: 'Unexpected error during password reset',
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.authProfilePath,
       );
+      final data = response.data;
+      final userJson = data?['user'] as Map<String, dynamic>?;
+      if (userJson == null) {
+        throw const ServerException(message: 'User profile not available');
+      }
+      return UserModel.fromJson(userJson);
+    } on DioException catch (error) {
+      throw ServerException(message: _resolveErrorMessage(error));
+    } catch (error) {
+      throw const ServerException(message: 'Failed to load user profile');
     }
   }
 
-  @override
-  Future<UserModel?> getCurrentUser() async {
-    try {
-      final user = _client.auth.currentUser;
-      return user != null ? UserModel.fromSupabaseUser(user) : null;
-    } catch (e) {
-      throw const ServerException(message: 'Failed to get current user');
+  String _resolveErrorMessage(DioException error) {
+    final data = error.response?.data;
+    if (data is Map<String, dynamic>) {
+      final message = data['message'] as String?;
+      if (message != null && message.isNotEmpty) {
+        return message;
+      }
     }
-  }
-
-  @override
-  Stream<UserModel?> get authStateChanges {
-    return _client.auth.onAuthStateChange.map((event) {
-      final user = event.session?.user;
-      return user != null ? UserModel.fromSupabaseUser(user) : null;
-    });
+    return error.message ?? 'Network error';
   }
 }

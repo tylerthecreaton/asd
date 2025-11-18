@@ -1,17 +1,27 @@
 import 'package:dio/dio.dart';
 
 import '../constants/api_constants.dart';
+import '../services/token_storage.dart';
+import 'interceptors/auth_interceptor.dart';
 
 class ApiClient {
-  ApiClient()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: ApiConstants.videoAnalysisBaseUrl,
-          connectTimeout: ApiConstants.connectTimeout,
-          receiveTimeout: ApiConstants.receiveTimeout,
-          sendTimeout: ApiConstants.sendTimeout,
-        ),
-      )..interceptors.add(LogInterceptor(responseBody: true));
+  ApiClient({TokenStorage? tokenStorage, Dio? dio})
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: ApiConstants.backendBaseUrl,
+              connectTimeout: ApiConstants.connectTimeout,
+              receiveTimeout: ApiConstants.receiveTimeout,
+              sendTimeout: ApiConstants.sendTimeout,
+              contentType: Headers.jsonContentType,
+            ),
+          ) {
+    if (tokenStorage != null) {
+      _dio.interceptors.add(AuthInterceptor(tokenStorage));
+    }
+    _dio.interceptors.add(LogInterceptor(responseBody: true));
+  }
 
   final Dio _dio;
 
@@ -44,6 +54,34 @@ class ApiClient {
       options: options,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
+    );
+  }
+
+  Future<Response<T>> put<T>(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) {
+    return _dio.put<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    );
+  }
+
+  Future<Response<T>> delete<T>(
+    String path, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) {
+    return _dio.delete<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
     );
   }
 }

@@ -6,12 +6,15 @@ class MChatQuestions {
 
   static const Questionnaire questionnaire = Questionnaire(
     id: 'mchat',
+    slug: 'mchat',
     title: 'M-CHAT',
-    description: 'แบบคัดกรองออทิสติกแก้ไขสำหรับเด็กเล็ก (Modified Checklist for Autism in Toddlers)',
+    description:
+        'แบบคัดกรองออทิสติกแก้ไขสำหรับเด็กเล็ก (Modified Checklist for Autism in Toddlers)',
     questions: [
       Question(
         id: 'q1',
-        text: 'ลูกของคุณสนุกกับการถูกโยกไปมา หรือถูกกระโดดบนหัวเข่าของคุณหรือไม่?',
+        text:
+            'ลูกของคุณสนุกกับการถูกโยกไปมา หรือถูกกระโดดบนหัวเข่าของคุณหรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
@@ -29,7 +32,8 @@ class MChatQuestions {
       ),
       Question(
         id: 'q4',
-        text: 'ลูกของคุณสนุกกับการเล่นซ่อนหาหรือเกมอุ๊ยอุ๊ย (peek-a-boo) หรือไม่?',
+        text:
+            'ลูกของคุณสนุกกับการเล่นซ่อนหาหรือเกมอุ๊ยอุ๊ย (peek-a-boo) หรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
@@ -42,15 +46,13 @@ class MChatQuestions {
       ),
       Question(
         id: 'q6',
-        text:
-            'ลูกของคุณเคยใช้นิ้วชี้เพื่อขอสิ่งที่ต้องการหรือไม่?',
+        text: 'ลูกของคุณเคยใช้นิ้วชี้เพื่อขอสิ่งที่ต้องการหรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
       Question(
         id: 'q7',
-        text:
-            'ลูกของคุณเคยใช้นิ้วชี้เพื่อแสดงความสนใจในสิ่งต่างๆ หรือไม่?',
+        text: 'ลูกของคุณเคยใช้นิ้วชี้เพื่อแสดงความสนใจในสิ่งต่างๆ หรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
@@ -70,8 +72,7 @@ class MChatQuestions {
       ),
       Question(
         id: 'q10',
-        text:
-            'ลูกของคุณจะสบสายตากับคุณนานกว่าหนึ่งหรือสองวินาทีหรือไม่?',
+        text: 'ลูกของคุณจะสบสายตากับคุณนานกว่าหนึ่งหรือสองวินาทีหรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
@@ -97,8 +98,7 @@ class MChatQuestions {
       ),
       Question(
         id: 'q14',
-        text:
-            'เมื่อคุณเรียกชื่อลูก ลูกของคุณจะตอบสนองหรือไม่?',
+        text: 'เมื่อคุณเรียกชื่อลูก ลูกของคุณจะตอบสนองหรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 0,
       ),
@@ -123,8 +123,7 @@ class MChatQuestions {
       ),
       Question(
         id: 'q18',
-        text:
-            'ลูกของคุณมีการเคลื่อนไหวนิ้วที่ผิดปกติใกล้ใบหน้าหรือไม่?',
+        text: 'ลูกของคุณมีการเคลื่อนไหวนิ้วที่ผิดปกติใกล้ใบหน้าหรือไม่?',
         options: ['ใช่', 'ไม่ใช่'],
         correctAnswerIndex: 1,
       ),

@@ -201,7 +201,9 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     int totalQuestions,
     List<response_entity.Response> responses,
     Questionnaire questionnaire,
+    bool isSubmitting,
   ) {
+    if (isSubmitting) return;
     if (!_canProceed(questionnaire, _currentPage, responses)) {
       setState(() {
         _showValidationMessage = true;
@@ -256,12 +258,33 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
   }
 
   Future<void> _submitQuestionnaire() async {
-    final success = await ref
+    final result = await ref
         .read(questionnaireProvider.notifier)
         .submitQuestionnaire();
-    if (success && mounted) {
-      context.go(RouteConstants.questionnaireResults);
-    }
+    await result.fold(
+      (failure) async {
+        _showSubmissionError(failure.message);
+      },
+      (assessment) async {
+        final questionnaireId = ref
+            .read(questionnaireProvider)
+            .value
+            ?.questionnaire
+            ?.id;
+        if (questionnaireId != null) {
+          await _clearSavedProgress(questionnaireId);
+        }
+        if (!mounted) return;
+        context.go(RouteConstants.questionnaireResults, extra: assessment);
+      },
+    );
+  }
+
+  void _showSubmissionError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showExitConfirmationDialog() {
@@ -351,6 +374,7 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
 
         final responses = state.responses;
         final questions = questionnaire.questions;
+        final isSubmitting = state.isSubmitting;
 
         return Scaffold(
           appBar: AppBar(
@@ -522,7 +546,9 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                   children: [
                     CustomButton(
                       text: 'ย้อนกลับ',
-                      onPressed: _currentPage > 0 ? _previousPage : null,
+                      onPressed: _currentPage > 0 && !isSubmitting
+                          ? _previousPage
+                          : null,
                       buttonType: ButtonType.outlined,
                       icon: const Icon(Icons.arrow_back, size: 18),
                     ),
@@ -530,8 +556,16 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
                       text: _currentPage < questions.length - 1
                           ? 'ถัดไป'
                           : 'ส่งคำตอบ',
-                      onPressed: () =>
-                          _nextPage(questions.length, responses, questionnaire),
+                      onPressed: isSubmitting
+                          ? null
+                          : () => _nextPage(
+                              questions.length,
+                              responses,
+                              questionnaire,
+                              isSubmitting,
+                            ),
+                      isLoading:
+                          isSubmitting && _currentPage == questions.length - 1,
                       icon: _currentPage < questions.length - 1
                           ? const Icon(Icons.arrow_forward, size: 18)
                           : const Icon(Icons.check_circle, size: 18),
@@ -559,5 +593,12 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     if (currentPage >= questions.length) return false;
     final currentQuestionId = questions[currentPage].id;
     return responses.any((r) => r.questionId == currentQuestionId);
+  }
+
+  Future<void> _clearSavedProgress(String questionnaireId) async {
+    const storage = FlutterSecureStorage();
+    await storage.delete(key: 'questionnaire_$questionnaireId');
+    await storage.delete(key: 'questionnaire_${questionnaireId}_page');
+    await storage.delete(key: 'questionnaire_${questionnaireId}_time');
   }
 }

@@ -6,6 +6,7 @@ import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
 import '../../../core/constants/route_constants.dart';
 import '../../authentication/presentation/providers/auth_provider.dart';
+import '../../questionnaire/presentation/providers/assessment_history_provider.dart';
 import '../widgets/feature_card.dart';
 import '../widgets/recent_assessment_item.dart';
 import '../widgets/welcome_banner.dart';
@@ -17,6 +18,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final userName = authState.user?.name ?? 'ผู้ใช้งาน';
+    final assessmentHistoryAsync = ref.watch(assessmentHistoryProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -38,10 +40,7 @@ class HomePage extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Section Title - Features
-                Text(
-                  'เครื่องมือคัดกรอง',
-                  style: AppTextStyles.headline3,
-                ),
+                Text('เครื่องมือคัดกรอง', style: AppTextStyles.headline3),
 
                 const SizedBox(height: 16),
 
@@ -78,17 +77,12 @@ class HomePage extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'การประเมินล่าสุด',
-                      style: AppTextStyles.headline3,
-                    ),
+                    Text('การประเมินล่าสุด', style: AppTextStyles.headline3),
                     TextButton(
                       onPressed: () {
                         // TODO: Navigate to assessment history
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('ฟีเจอร์กำลังพัฒนา'),
-                          ),
+                          const SnackBar(content: Text('ฟีเจอร์กำลังพัฒนา')),
                         );
                       },
                       child: Text(
@@ -103,47 +97,42 @@ class HomePage extends ConsumerWidget {
                 ),
 
                 const SizedBox(height: 12),
-
-                // Recent Assessments List (Mock Data)
-                RecentAssessmentItem(
-                  title: 'แบบประเมิน M-CHAT',
-                  date: '15 พ.ย. 2568',
-                  status: 'completed',
-                  icon: Icons.quiz,
-                  onTap: () {
-                    // TODO: Navigate to assessment detail
-                    context.push(RouteConstants.questionnaireResults);
+                assessmentHistoryAsync.when(
+                  data: (assessments) {
+                    if (assessments.isEmpty) {
+                      return _buildEmptyAssessments(context);
+                    }
+                    return Column(
+                      children: assessments.take(3).map((assessment) {
+                        final title =
+                            assessment.questionnaireTitle ??
+                            'แบบประเมิน M-CHAT';
+                        return RecentAssessmentItem(
+                          title: title,
+                          date: _formatDate(assessment.completedAt),
+                          status: assessment.riskLevel.name,
+                          icon: Icons.quiz,
+                          onTap: () {
+                            context.push(
+                              RouteConstants.questionnaireResults,
+                              extra: assessment,
+                            );
+                          },
+                        );
+                      }).toList(),
+                    );
                   },
-                ),
-
-                RecentAssessmentItem(
-                  title: 'วิเคราะห์วิดีโอ',
-                  date: '12 พ.ย. 2568',
-                  status: 'completed',
-                  icon: Icons.videocam,
-                  onTap: () {
-                    // TODO: Navigate to video analysis result
-                    context.push(RouteConstants.videoAnalysisResults);
-                  },
-                ),
-
-                RecentAssessmentItem(
-                  title: 'แบบประเมิน M-CHAT',
-                  date: '8 พ.ย. 2568',
-                  status: 'completed',
-                  icon: Icons.quiz,
-                  onTap: () {
-                    context.push(RouteConstants.questionnaireResults);
-                  },
+                  loading: () => const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  error: (error, _) => _buildAssessmentsError(context),
                 ),
 
                 const SizedBox(height: 32),
 
                 // Quick Actions Section
-                Text(
-                  'การดำเนินการด่วน',
-                  style: AppTextStyles.headline3,
-                ),
+                Text('การดำเนินการด่วน', style: AppTextStyles.headline3),
 
                 const SizedBox(height: 16),
 
@@ -231,14 +220,65 @@ class HomePage extends ConsumerWidget {
                 context.go(RouteConstants.login);
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.error,
-            ),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
             child: const Text('ออกจากระบบ'),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildEmptyAssessments(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'ยังไม่มีผลการประเมิน',
+              style: AppTextStyles.bodyText1.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'เริ่มทำแบบประเมิน M-CHAT เพื่อดูผลลัพธ์ล่าสุดของคุณ',
+              style: AppTextStyles.caption,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAssessmentsError(BuildContext context) {
+    return Card(
+      color: AppColors.error.withValues(alpha: 0.05),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Icon(Icons.error_outline, color: AppColors.error),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'ไม่สามารถโหลดประวัติการประเมินได้',
+                style: AppTextStyles.bodyText2.copyWith(color: AppColors.error),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year + 543}';
   }
 }
 
@@ -262,9 +302,7 @@ class _QuickActionButton extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -272,11 +310,7 @@ class _QuickActionButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              Icon(
-                icon,
-                size: 32,
-                color: buttonColor,
-              ),
+              Icon(icon, size: 32, color: buttonColor),
               const SizedBox(height: 8),
               Text(
                 label,

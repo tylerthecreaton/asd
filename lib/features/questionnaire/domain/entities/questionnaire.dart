@@ -5,6 +5,7 @@ import 'question.dart';
 class Questionnaire extends Equatable {
   const Questionnaire({
     required this.id,
+    required this.slug,
     required this.title,
     required this.description,
     required this.questions,
@@ -12,11 +13,19 @@ class Questionnaire extends Equatable {
   });
 
   final String id;
+  final String slug;
   final String title;
   final String description;
   final List<Question> questions;
   final int passingScore;
 
   @override
-  List<Object?> get props => [id, title, description, questions, passingScore];
+  List<Object?> get props => [
+    id,
+    slug,
+    title,
+    description,
+    questions,
+    passingScore,
+  ];
 }

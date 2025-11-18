@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/route_constants.dart';
+import '../../authentication/presentation/providers/auth_provider.dart';
+import '../../../core/services/providers/storage_providers.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -43,13 +45,24 @@ class _SplashPageState extends ConsumerState<SplashPage>
     super.dispose();
   }
 
-  void _navigateToNextPage() {
-    // Simulate splash screen delay
-    Future.delayed(AppConstants.splashDelay, () {
-      if (mounted) {
-        context.go(RouteConstants.onboarding);
-      }
-    });
+  Future<void> _navigateToNextPage() async {
+    await Future.delayed(AppConstants.splashDelay);
+
+    final tokenStorage = ref.read(tokenStorageProvider);
+    final hasToken = await tokenStorage.hasToken();
+
+    String targetRoute = RouteConstants.onboarding;
+
+    if (hasToken) {
+      await ref.read(authProvider.notifier).restoreSession();
+      final authState = ref.read(authProvider);
+      targetRoute = authState.isAuthenticated
+          ? RouteConstants.home
+          : RouteConstants.login;
+    }
+
+    if (!mounted) return;
+    context.go(targetRoute);
   }
 
   @override

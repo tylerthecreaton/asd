@@ -35,7 +35,7 @@ class PdfService {
                 style: pw.TextStyle(font: regularFont, fontSize: 12),
               ),
               pw.Text(
-                'Questionnaire: M-CHAT',
+                'Questionnaire: ${result.questionnaireTitle ?? 'M-CHAT'}',
                 style: pw.TextStyle(font: regularFont, fontSize: 12),
               ),
               pw.SizedBox(height: 24),

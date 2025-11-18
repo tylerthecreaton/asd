@@ -12,11 +12,17 @@ import '../providers/questionnaire_provider.dart';
 import '../widgets/results_summary.dart';
 
 class QuestionnaireResultsPage extends ConsumerWidget {
-  const QuestionnaireResultsPage({super.key});
+  const QuestionnaireResultsPage({super.key, this.initialResult});
+
+  final AssessmentResult? initialResult;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resultAsync = ref.watch(questionnaireResultsProvider);
+    final providerResult = ref.watch(questionnaireResultsProvider);
+    final resolvedResult = initialResult ?? providerResult.value;
+    final resultAsync = initialResult != null
+        ? AsyncValue.data(initialResult!)
+        : providerResult;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +30,7 @@ class QuestionnaireResultsPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _shareResults(context, ref),
+            onPressed: () => _shareResults(context, resolvedResult),
           ),
         ],
       ),
@@ -174,8 +180,10 @@ class QuestionnaireResultsPage extends ConsumerWidget {
     }
   }
 
-  Future<void> _shareResults(BuildContext context, WidgetRef ref) async {
-    final result = ref.read(questionnaireResultsProvider).value;
+  Future<void> _shareResults(
+    BuildContext context,
+    AssessmentResult? result,
+  ) async {
     if (result == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

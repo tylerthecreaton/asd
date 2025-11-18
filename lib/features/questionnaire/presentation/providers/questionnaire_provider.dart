@@ -1,9 +1,14 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../questionnaire/data/models/mchat_questions.dart';
+
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/errors/failures.dart';
 import '../../../questionnaire/domain/entities/assessment_result.dart';
 import '../../../questionnaire/domain/entities/questionnaire.dart';
 import '../../../questionnaire/domain/entities/response.dart'
     as response_entity;
+import '../../../questionnaire/domain/repositories/questionnaire_repository.dart';
+import 'questionnaire_dependencies.dart';
 
 part 'questionnaire_state.dart';
 
@@ -22,11 +27,18 @@ final questionnaireResultsProvider = Provider<AsyncValue<AssessmentResult?>>((
 
 class QuestionnaireController
     extends AutoDisposeAsyncNotifier<QuestionnaireState> {
+  static const String _defaultQuestionnaireIdentifier =
+      AppConstants.defaultQuestionnaireSlug;
+
+  QuestionnaireRepository get _repository =>
+      ref.read(questionnaireRepositoryProvider);
+
   @override
   Future<QuestionnaireState> build() async {
-    return const QuestionnaireState(
-      questionnaire: MChatQuestions.questionnaire,
-      responses: [],
+    final questionnaire = await _loadQuestionnaire();
+    return QuestionnaireState(
+      questionnaire: questionnaire,
+      responses: const [],
       latestResult: null,
     );
   }
@@ -62,98 +74,89 @@ class QuestionnaireController
   }
 
   Future<void> resetQuestionnaire() async {
-    state = const AsyncValue.loading();
-    state = const AsyncValue.data(
+    final currentState = state.value;
+    if (currentState == null) {
+      state = const AsyncValue.loading();
+      final questionnaire = await _loadQuestionnaire();
+      state = AsyncValue.data(
+        QuestionnaireState(
+          questionnaire: questionnaire,
+          responses: const [],
+          latestResult: null,
+        ),
+      );
+      return;
+    }
+
+    state = AsyncValue.data(
       QuestionnaireState(
-        questionnaire: MChatQuestions.questionnaire,
-        responses: [],
+        questionnaire: currentState.questionnaire,
+        responses: const [],
         latestResult: null,
       ),
     );
   }
 
-  Future<bool> submitQuestionnaire() async {
+  Future<Either<Failure, AssessmentResult>> submitQuestionnaire() async {
     final currentState = state.value;
     if (currentState == null || currentState.questionnaire == null) {
-      return false;
+      return const Left(ValidationFailure('แบบประเมินไม่พร้อมใช้งาน'));
     }
     final questionnaire = currentState.questionnaire!;
     if (currentState.responses.length < questionnaire.questions.length) {
-      return false;
+      return const Left(ValidationFailure('กรุณาตอบคำถามให้ครบทุกข้อ'));
     }
 
-    final result = _calculateResult(questionnaire, currentState.responses);
-    state = AsyncValue.data(currentState.copyWith(latestResult: result));
-    return true;
-  }
+    _setSubmitting(true);
 
-  AssessmentResult _calculateResult(
-    Questionnaire questionnaire,
-    List<response_entity.Response> responses,
-  ) {
-    final questions = questionnaire.questions;
-    var score = 0;
-    final flagged = <String>[];
+    final identifier = questionnaire.slug.isNotEmpty
+        ? questionnaire.slug
+        : questionnaire.id;
 
-    for (final question in questions) {
-      final response = responses.firstWhere((r) => r.questionId == question.id);
-      final isCorrect = response.answerIndex == question.correctAnswerIndex;
-      if (!isCorrect) {
-        score++;
-        flagged.add(question.text);
-      }
-    }
+    final result = await _repository.submitResponses(
+      identifier: identifier,
+      responses: currentState.responses,
+    );
 
-    final riskLevel = _determineRiskLevel(score);
-    final recommendations = _buildRecommendations(riskLevel, flagged);
-
-    return AssessmentResult(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      questionnaireId: questionnaire.id,
-      userId: 'anonymous',
-      score: score,
-      totalQuestions: questions.length,
-      riskLevel: riskLevel,
-      flaggedBehaviors: flagged,
-      completedAt: DateTime.now(),
-      recommendations: recommendations,
+    return result.fold(
+      (failure) {
+        _setSubmitting(false);
+        return Left(failure);
+      },
+      (assessment) {
+        state = AsyncValue.data(
+          currentState.copyWith(latestResult: assessment, isSubmitting: false),
+        );
+        return Right(assessment);
+      },
     );
   }
 
-  RiskLevel _determineRiskLevel(int score) {
-    if (score <= 2) {
-      return RiskLevel.low;
-    } else if (score <= 5) {
-      return RiskLevel.medium;
-    }
-    return RiskLevel.high;
+  Future<void> reloadQuestionnaire() async {
+    state = const AsyncValue.loading();
+    final questionnaire = await _loadQuestionnaire();
+    state = AsyncValue.data(
+      QuestionnaireState(
+        questionnaire: questionnaire,
+        responses: const [],
+        latestResult: null,
+      ),
+    );
   }
 
-  Map<String, dynamic> _buildRecommendations(
-    RiskLevel riskLevel,
-    List<String> flaggedBehaviors,
-  ) {
-    switch (riskLevel) {
-      case RiskLevel.low:
-        return {
-          'Summary': 'Low risk observed. Continue regular monitoring.',
-          'Suggested Action':
-              'Re-screen in 3 months or sooner if concerns arise.',
-        };
-      case RiskLevel.medium:
-        return {
-          'Summary': 'Moderate risk detected.',
-          'Suggested Action':
-              'Consult a pediatric specialist and consider scheduling a professional screening.',
-          'Flagged Behaviors': flaggedBehaviors,
-        };
-      case RiskLevel.high:
-        return {
-          'Summary': 'High risk detected for ASD indicators.',
-          'Suggested Action':
-              'Seek immediate consultation with a developmental pediatrician.',
-          'Flagged Behaviors': flaggedBehaviors,
-        };
-    }
+  Future<Questionnaire> _loadQuestionnaire() async {
+    final result = await _repository.fetchQuestionnaire(
+      _defaultQuestionnaireIdentifier,
+    );
+    return result.fold(
+      (failure) => throw Exception(failure.message),
+      (questionnaire) => questionnaire,
+    );
+  }
+
+  void _setSubmitting(bool value) {
+    final currentState = state.value;
+    if (currentState == null) return;
+    state = AsyncValue.data(currentState.copyWith(isSubmitting: value));
   }
 }

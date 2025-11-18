@@ -21,6 +21,12 @@ class RecentAssessmentItem extends StatelessWidget {
 
   Color _getStatusColor() {
     switch (status.toLowerCase()) {
+      case 'low':
+        return AppColors.success;
+      case 'medium':
+        return AppColors.warning;
+      case 'high':
+        return AppColors.error;
       case 'completed':
       case 'เสร็จสิ้น':
         return AppColors.success;
@@ -37,6 +43,12 @@ class RecentAssessmentItem extends StatelessWidget {
 
   String _getStatusText() {
     switch (status.toLowerCase()) {
+      case 'low':
+        return 'ความเสี่ยงต่ำ';
+      case 'medium':
+        return 'ความเสี่ยงปานกลาง';
+      case 'high':
+        return 'ความเสี่ยงสูง';
       case 'completed':
         return 'เสร็จสิ้น';
       case 'pending':
