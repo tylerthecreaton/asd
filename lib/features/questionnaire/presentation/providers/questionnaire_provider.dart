@@ -5,6 +5,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../questionnaire/domain/entities/assessment_result.dart';
 import '../../../questionnaire/domain/entities/questionnaire.dart';
+import '../../../questionnaire/domain/entities/question.dart';
 import '../../../questionnaire/domain/entities/response.dart'
     as response_entity;
 import '../../../questionnaire/domain/repositories/questionnaire_repository.dart';
@@ -43,7 +44,7 @@ class QuestionnaireController
     );
   }
 
-  void updateResponse(String questionId, int answerIndex) {
+  void updateResponse(String questionId, int answerIndex, {int? points}) {
     final currentState = state.value;
     if (currentState == null) return;
 
@@ -53,10 +54,15 @@ class QuestionnaireController
     final responseIndex = updatedResponses.indexWhere(
       (r) => r.questionId == questionId,
     );
+    
+    // Calculate points based on scoring type if not provided
+    final calculatedPoints = points ?? _calculatePoints(questionId, answerIndex, currentState);
+    
     final updatedResponse = response_entity.Response(
       questionId: questionId,
       answerIndex: answerIndex,
       answeredAt: DateTime.now(),
+      points: calculatedPoints,
     );
 
     if (responseIndex == -1) {
@@ -71,6 +77,29 @@ class QuestionnaireController
         clearResult: true,
       ),
     );
+  }
+
+  int _calculatePoints(String questionId, int answerIndex, QuestionnaireState currentState) {
+    final questionnaire = currentState.questionnaire;
+    if (questionnaire == null) return 0;
+    
+    final question = questionnaire.questions.firstWhere(
+      (q) => q.id == questionId,
+      orElse: () => Question(
+        id: questionId,
+        text: '',
+        options: [''],
+        correctAnswerIndex: 0,
+      ),
+    );
+    
+    if (question.scoringType == 'qchat') {
+      // Q-CHAT scoring: 0, 1, 2 points based on answer selection
+      return answerIndex;
+    } else {
+      // Standard binary scoring
+      return answerIndex != question.correctAnswerIndex ? 1 : 0;
+    }
   }
 
   Future<void> resetQuestionnaire() async {
@@ -112,6 +141,23 @@ class QuestionnaireController
     final identifier = questionnaire.slug.isNotEmpty
         ? questionnaire.slug
         : questionnaire.id;
+
+    // Convert responses to include points for Q-CHAT
+    final responsesWithPoints = currentState.responses.map((response) {
+      int points = response.points;
+      if (questionnaire.type == 'qchat' && points == 0) {
+        // Calculate points for Q-CHAT if not already calculated
+        final question = questionnaire.questions.firstWhere(
+          (q) => q.id == response.questionId,
+        );
+        points = response.answerIndex; // Q-CHAT scoring: 0, 1, 2
+      }
+      return {
+        'questionId': response.questionId,
+        'answerIndex': response.answerIndex,
+        'points': points,
+      };
+    }).toList();
 
     final result = await _repository.submitResponses(
       identifier: identifier,

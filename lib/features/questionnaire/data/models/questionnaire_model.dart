@@ -9,6 +9,8 @@ class QuestionnaireModel extends Questionnaire {
     required super.description,
     required super.questions,
     required super.passingScore,
+    super.type = 'standard',
+    super.maxScore = 0,
   });
 
   factory QuestionnaireModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,8 @@ class QuestionnaireModel extends Questionnaire {
       description: json['description'] as String? ?? '',
       questions: questions,
       passingScore: json['passingScore'] as int? ?? 0,
+      type: json['type'] as String? ?? 'standard',
+      maxScore: json['maxScore'] as int? ?? 0,
     );
   }
 }

@@ -70,11 +70,17 @@ class _QuestionCardState extends State<QuestionCard> {
             itemBuilder: (context, index) {
               final option = widget.question.options[index];
               final isSelected = _selectedAnswer == index;
+              
+              // Calculate points for Q-CHAT questions
+              String pointsText = '';
+              if (widget.question.scoringType == 'qchat') {
+                pointsText = ' (${index} คะแนน)';
+              }
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: CustomButton(
-                  text: option,
+                  text: '$option$pointsText',
                   width: double.infinity,
                   buttonType: isSelected
                       ? ButtonType.elevated

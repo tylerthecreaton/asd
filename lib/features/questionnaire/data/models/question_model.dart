@@ -9,6 +9,8 @@ class QuestionModel extends Question {
     required super.correctAnswerIndex,
     required this.backendId,
     this.order,
+    super.scoringType = 'binary',
+    super.maxPoints = 1,
   });
 
   final String backendId;
@@ -29,6 +31,8 @@ class QuestionModel extends Question {
       correctAnswerIndex: json['correctAnswerIndex'] as int? ?? 0,
       backendId: backendId,
       order: json['order'] as int?,
+      scoringType: json['scoringType'] as String? ?? 'binary',
+      maxPoints: json['maxPoints'] as int? ?? 1,
     );
   }
 }

@@ -5,20 +5,23 @@ class Response extends Equatable {
     required this.questionId,
     required this.answerIndex,
     required this.answeredAt,
+    this.points = 0,
   });
 
   final String questionId;
   final int answerIndex;
   final DateTime answeredAt;
+  final int points;
 
   @override
-  List<Object?> get props => [questionId, answerIndex, answeredAt];
+  List<Object?> get props => [questionId, answerIndex, answeredAt, points];
   
   Map<String, dynamic> toJson() {
     return {
       'questionId': questionId,
       'answerIndex': answerIndex,
       'answeredAt': answeredAt.toIso8601String(),
+      'points': points,
     };
   }
   
@@ -27,6 +30,7 @@ class Response extends Equatable {
       questionId: json['questionId'],
       answerIndex: json['answerIndex'],
       answeredAt: DateTime.parse(json['answeredAt']),
+      points: json['points'] ?? 0,
     );
   }
 }

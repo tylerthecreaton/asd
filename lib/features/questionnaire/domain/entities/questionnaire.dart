@@ -10,6 +10,8 @@ class Questionnaire extends Equatable {
     required this.description,
     required this.questions,
     required this.passingScore,
+    this.type = 'standard',
+    this.maxScore = 0,
   });
 
   final String id;
@@ -18,6 +20,8 @@ class Questionnaire extends Equatable {
   final String description;
   final List<Question> questions;
   final int passingScore;
+  final String type; // 'standard' or 'qchat'
+  final int maxScore;
 
   @override
   List<Object?> get props => [
@@ -27,5 +31,7 @@ class Questionnaire extends Equatable {
     description,
     questions,
     passingScore,
+    type,
+    maxScore,
   ];
 }

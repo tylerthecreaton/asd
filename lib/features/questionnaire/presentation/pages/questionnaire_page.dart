@@ -386,6 +386,29 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
               },
             ),
             actions: [
+              if (questionnaire.type == 'qchat')
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.scoreboard_outlined,
+                        size: 20,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'คะแนน: ${_calculateCurrentScore(responses)}',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Row(
@@ -593,6 +616,10 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
     if (currentPage >= questions.length) return false;
     final currentQuestionId = questions[currentPage].id;
     return responses.any((r) => r.questionId == currentQuestionId);
+  }
+
+  int _calculateCurrentScore(List<response_entity.Response> responses) {
+    return responses.fold(0, (sum, response) => sum + response.points);
   }
 
   Future<void> _clearSavedProgress(String questionnaireId) async {

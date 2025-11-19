@@ -7,6 +7,8 @@ class Question extends Equatable {
     this.description,
     required this.options,
     required this.correctAnswerIndex,
+    this.scoringType = 'binary',
+    this.maxPoints = 1,
   });
 
   final String id;
@@ -14,6 +16,8 @@ class Question extends Equatable {
   final String? description;
   final List<String> options;
   final int correctAnswerIndex;
+  final String scoringType; // 'binary' or 'qchat'
+  final int maxPoints;
 
   @override
   List<Object?> get props => [
@@ -22,5 +26,7 @@ class Question extends Equatable {
     description,
     options,
     correctAnswerIndex,
+    scoringType,
+    maxPoints,
   ];
 }

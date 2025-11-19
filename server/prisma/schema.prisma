@@ -24,6 +24,8 @@ model Questionnaire {
     title        String
     description  String
     passingScore Int
+    type         String   @default("standard") // "standard" or "qchat"
+    maxScore     Int      @default(0)
     createdAt    DateTime @default(now())
     updatedAt    DateTime @updatedAt
 
@@ -41,6 +43,8 @@ model Question {
     optionsJson        String
     correctAnswerIndex Int
     displayOrder       Int
+    scoringType        String        @default("binary") // "binary" or "qchat"
+    maxPoints          Int           @default(1)
     createdAt          DateTime      @default(now())
     updatedAt          DateTime      @updatedAt
 
@@ -73,5 +77,6 @@ model Response {
     question      Question         @relation(fields: [questionId], references: [id], onDelete: Cascade)
     questionId    String
     selectedIndex Int
+    points        Int              @default(0)
     createdAt     DateTime         @default(now())
 }

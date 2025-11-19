@@ -65,7 +65,9 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.assignment,
+                              questionnaire?.type == 'qchat'
+                                  ? Icons.quiz_outlined
+                                  : Icons.assignment,
                               size: 64,
                               color: theme.colorScheme.primary,
                             ),
@@ -88,6 +90,38 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            if (questionnaire?.type == 'qchat') ...[
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          color: theme.colorScheme.primary,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'ระดับความเสี่ยง: Low (0-15), Medium (16-30), High (31-50)',
+                                          style: theme.textTheme.bodyMedium?.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
