@@ -19,6 +19,7 @@ import '../../features/video_analysis/presentation/pages/video_analysis_intro_pa
 import '../../features/video_analysis/presentation/pages/video_analysis_results_page.dart';
 import '../../features/video_analysis/presentation/pages/video_preview_page.dart';
 import '../../features/video_analysis/presentation/pages/video_recording_page.dart';
+import '../../features/questionnaire/presentation/pages/assessment_history_page.dart';
 
 final List<GoRoute> appRoutes = [
   GoRoute(
@@ -110,6 +111,11 @@ final List<GoRoute> appRoutes = [
     path: RouteConstants.videoAnalysisResults,
     name: 'videoAnalysisResults',
     builder: (context, _) => const VideoAnalysisResultsPage(),
+  ),
+  GoRoute(
+    path: RouteConstants.assessmentHistory,
+    name: 'assessmentHistory',
+    builder: (context, state) => const AssessmentHistoryPage(),
   ),
   // Additional routes will be added in subsequent phases
 ];

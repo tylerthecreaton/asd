@@ -222,7 +222,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
               _buildQuickActionCard(
                 icon: Icons.quiz,
                 title: 'ทำแบบประเมิน',
-                subtitle: 'M-CHAT',
+                subtitle: 'Q-CHAT',
                 color: AppColors.primary,
                 onTap: () {
                   // Navigate to questionnaire intro page

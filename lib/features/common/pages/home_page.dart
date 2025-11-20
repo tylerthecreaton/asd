@@ -80,10 +80,7 @@ class HomePage extends ConsumerWidget {
                     Text('การประเมินล่าสุด', style: AppTextStyles.headline3),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to assessment history
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('ฟีเจอร์กำลังพัฒนา')),
-                        );
+                        context.push(RouteConstants.assessmentHistory);
                       },
                       child: Text(
                         'ดูทั้งหมด',
