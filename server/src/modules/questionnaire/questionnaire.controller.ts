@@ -101,6 +101,8 @@ export const getQuestionnaire = async (
         title: questionnaire.title,
         description: questionnaire.description,
         passingScore: questionnaire.passingScore,
+        type: questionnaire.type,
+        maxScore: questionnaire.maxScore,
         questions: questionnaire.questions.map(toQuestionSummary),
       },
     });
@@ -166,21 +168,22 @@ export const submitQuestionnaire = async (
 
       let points = 0;
       if (question.scoringType === "qchat") {
-        // Q-CHAT scoring: 0, 1, 2 points based on answer selection
-        points = answer; // 0 for "Never/Rarely", 1 for "Sometimes", 2 for "Usually/Always"
+        // Q-CHAT scoring: reverse scoring - index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
+        points = options.length - 1 - answer;
         score += points;
-        
+
         // Flag questions with higher scores (1 or 2 points)
         if (points >= 1) {
           flagged.push(question.text);
         }
       } else {
-        // Standard binary scoring (M-CHAT style)
+        // Standard binary scoring
         if (answer !== question.correctAnswerIndex) {
-          score = 1; // Each failed question adds 1 point
+          points = 1; // Each failed question adds 1 point
+          score += points;
           flagged.push(question.text);
         } else {
-          score = 0; // Correct answers add 0 points
+          points = 0; // Correct answers add 0 points
         }
       }
 
@@ -196,10 +199,10 @@ export const submitQuestionnaire = async (
     // Determine risk level based on questionnaire type
     let riskLevel: "low" | "medium" | "high";
     if (questionnaire.type === "qchat") {
-      // Q-CHAT risk levels: Low (0-15), Medium (16-30), High (31-50)
-      if (score <= 15) {
+      // Q-CHAT-10 risk levels (maxScore = 20): Low (0-6), Medium (7-13), High (14-20)
+      if (score <= 6) {
         riskLevel = "low";
-      } else if (score <= 30) {
+      } else if (score <= 13) {
         riskLevel = "medium";
       } else {
         riskLevel = "high";
@@ -208,7 +211,7 @@ export const submitQuestionnaire = async (
       // Standard questionnaire risk levels
       riskLevel = determineRiskLevel(score);
     }
-    
+
     const recommendations = buildRecommendations(riskLevel, flagged);
 
     const result = await prisma.assessmentResult.create({

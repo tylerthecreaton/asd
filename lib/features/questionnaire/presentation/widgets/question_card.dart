@@ -70,11 +70,13 @@ class _QuestionCardState extends State<QuestionCard> {
             itemBuilder: (context, index) {
               final option = widget.question.options[index];
               final isSelected = _selectedAnswer == index;
-              
-              // Calculate points for Q-CHAT questions
+
+              // Calculate points for Q-CHAT questions (reverse scoring)
               String pointsText = '';
               if (widget.question.scoringType == 'qchat') {
-                pointsText = ' (${index} คะแนน)';
+                // Q-CHAT uses reverse scoring: index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
+                final points = widget.question.options.length - 1 - index;
+                pointsText = ' ($points คะแนน)';
               }
 
               return Padding(

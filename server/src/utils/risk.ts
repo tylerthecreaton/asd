@@ -13,22 +13,39 @@ export const buildRecommendations = (
   switch (riskLevel) {
     case "low":
       return {
-        summary: "Low risk observed. Continue regular monitoring.",
-        suggestedAction: "Re-screen in 3 months or sooner if concerns arise.",
+        summary: "ผลการประเมินอยู่ในระดับความเสี่ยงต่ำ",
+        suggestedAction:
+          "แนะนำให้ติดตามพัฒนาการเด็กอย่างสม่ำเสมอ และทำแบบประเมินซ้ำใน 3 เดือน หรือเร็วกว่านั้นหากมีความกังวล",
+        nextSteps: [
+          "ติดตามพัฒนาการตามปกติ",
+          "สังเกตพฤติกรรมการสื่อสารและการมีปฏิสัมพันธ์ทางสังคม",
+          "ประเมินซ้ำใน 3 เดือน",
+        ],
       };
     case "medium":
       return {
-        summary: "Moderate risk detected.",
+        summary: "ผลการประเมินอยู่ในระดับความเสี่ยงปานกลาง",
         suggestedAction:
-          "Consult a pediatric specialist and consider scheduling a professional screening.",
+          "แนะนำให้ปรึกษากุมารแพทย์เฉพาะทางด้านพัฒนาการ และพิจารณาทำการประเมินเชิงลึกเพิ่มเติม",
+        nextSteps: [
+          "นัดพบกุมารแพทย์เฉพาะทางด้านพัฒนาการ",
+          "ทำการประเมินพัฒนาการอย่างละเอียด",
+          "พิจารณาการกระตุ้นพัฒนาการเบื้องต้น",
+        ],
         flaggedBehaviors,
       };
     case "high":
     default:
       return {
-        summary: "High risk detected for ASD indicators.",
+        summary: "ผลการประเมินอยู่ในระดับความเสี่ยงสูงที่บ่งชี้ถึงออทิสติก",
         suggestedAction:
-          "Seek immediate consultation with a developmental pediatrician.",
+          "แนะนำให้รีบปรึกษากุมารแพทย์เฉพาะทางด้านพัฒนาการโดยเร็วที่สุด เพื่อทำการวินิจฉัยและวางแผนการดูแลที่เหมาะสม",
+        nextSteps: [
+          "นัดพบกุมารแพทย์เฉพาะทางทันที",
+          "ทำการวินิจฉัยและประเมินอย่างละเอียด",
+          "เริ่มการบำบัดและพัฒนาทักษะตามความเหมาะสม",
+          "ขอคำแนะนำเรื่องการดูแลและการศึกษา",
+        ],
         flaggedBehaviors,
       };
   }

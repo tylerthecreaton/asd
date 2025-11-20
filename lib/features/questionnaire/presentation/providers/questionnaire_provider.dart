@@ -54,10 +54,11 @@ class QuestionnaireController
     final responseIndex = updatedResponses.indexWhere(
       (r) => r.questionId == questionId,
     );
-    
+
     // Calculate points based on scoring type if not provided
-    final calculatedPoints = points ?? _calculatePoints(questionId, answerIndex, currentState);
-    
+    final calculatedPoints =
+        points ?? _calculatePoints(questionId, answerIndex, currentState);
+
     final updatedResponse = response_entity.Response(
       questionId: questionId,
       answerIndex: answerIndex,
@@ -79,23 +80,25 @@ class QuestionnaireController
     );
   }
 
-  int _calculatePoints(String questionId, int answerIndex, QuestionnaireState currentState) {
+  int _calculatePoints(
+    String questionId,
+    int answerIndex,
+    QuestionnaireState currentState,
+  ) {
     final questionnaire = currentState.questionnaire;
     if (questionnaire == null) return 0;
-    
-    final question = questionnaire.questions.firstWhere(
-      (q) => q.id == questionId,
-      orElse: () => Question(
-        id: questionId,
-        text: '',
-        options: [''],
-        correctAnswerIndex: 0,
-      ),
-    );
-    
+
+    Question? question;
+    try {
+      question = questionnaire.questions.firstWhere((q) => q.id == questionId);
+    } catch (e) {
+      // Question not found, return 0
+      return 0;
+    }
+
     if (question.scoringType == 'qchat') {
-      // Q-CHAT scoring: 0, 1, 2 points based on answer selection
-      return answerIndex;
+      // Q-CHAT scoring: reverse scoring - index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
+      return question.options.length - 1 - answerIndex;
     } else {
       // Standard binary scoring
       return answerIndex != question.correctAnswerIndex ? 1 : 0;

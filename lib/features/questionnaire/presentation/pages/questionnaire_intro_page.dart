@@ -95,13 +95,16 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      crossAxisAlignment: WrapCrossAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.info_outline,
@@ -111,10 +114,12 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                                         const SizedBox(width: 8),
                                         Text(
                                           'ระดับความเสี่ยง: Low (0-15), Medium (16-30), High (31-50)',
-                                          style: theme.textTheme.bodyMedium?.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: theme.colorScheme.primary,
-                                          ),
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
                                         ),
                                       ],
                                     ),

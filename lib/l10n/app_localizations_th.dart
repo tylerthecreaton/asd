@@ -78,22 +78,25 @@ class AppLocalizationsTh extends AppLocalizations {
   String get welcome => 'ยินดีต้อนรับสู่การคัดกรอง ASD';
 
   @override
-  String get welcomeDescription => 'ช่วยระบุอาการแสดงออทิสติกระยะเริ่มต้นในเด็กผ่านเครื่องมือคัดกรองที่ครอบคลุม';
+  String get welcomeDescription =>
+      'ช่วยระบุอาการแสดงออทิสติกระยะเริ่มต้นในเด็กผ่านเครื่องมือคัดกรองที่ครอบคลุม';
 
   @override
   String get getStarted => 'เริ่มต้นใช้งาน';
 
   @override
-  String get questionnaireTitle => 'แบบสอบถาม M-CHAT';
+  String get questionnaireTitle => 'แบบสอบถาม Q-CHAT-10';
 
   @override
-  String get questionnaireDescription => 'Modified Checklist for Autism in Toddlers';
+  String get questionnaireDescription =>
+      'Modified Checklist for Autism in Toddlers';
 
   @override
   String get videoAnalysisTitle => 'การวิเคราะห์วิดีโอ';
 
   @override
-  String get videoAnalysisDescription => 'บันทึกและวิเคราะห์ปฏิกิริยาของเด็กจากวิดีโอกระตุ้น';
+  String get videoAnalysisDescription =>
+      'บันทึกและวิเคราะห์ปฏิกิริยาของเด็กจากวิดีโอกระตุ้น';
 
   @override
   String get riskAssessment => 'การประเมินความเสี่ยง';
@@ -132,13 +135,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get disclaimer => 'ข้อปฏิเสธความรับผิดชอบ';
 
   @override
-  String get disclaimerText => 'เครื่องมือคัดกรองนี้ออกแบบมาเพื่อการประเมินเบื้องต้นเท่านั้น และไม่สามารถใช้แทนการวินิจฉัยจากแพทย์ผู้เชี่ยวชาญได้ กรุณาปรึกษาแพทย์ผู้เชี่ยวชาญเพื่อการประเมินและวินิจฉัยที่ครอบคลุม';
+  String get disclaimerText =>
+      'เครื่องมือคัดกรองนี้ออกแบบมาเพื่อการประเมินเบื้องต้นเท่านั้น และไม่สามารถใช้แทนการวินิจฉัยจากแพทย์ผู้เชี่ยวชาญได้ กรุณาปรึกษาแพทย์ผู้เชี่ยวชาญเพื่อการประเมินและวินิจฉัยที่ครอบคลุม';
 
   @override
   String get recordingInstructions => 'คำแนะนำในการบันทึก';
 
   @override
-  String get recordingStep1 => '1. จัดท่าให้เด็กโดยที่ใบหน้าและส่วนบนของลำตัวมองเห็น';
+  String get recordingStep1 =>
+      '1. จัดท่าให้เด็กโดยที่ใบหน้าและส่วนบนของลำตัวมองเห็น';
 
   @override
   String get recordingStep2 => '2. ให้แสงสว่างเพียงพอ';
@@ -192,17 +197,20 @@ class AppLocalizationsTh extends AppLocalizations {
   String get backToHome => 'กลับสู่หน้าแรก';
 
   @override
-  String get questionnaireIntroTitle => 'แบบสอบถาม M-CHAT';
+  String get questionnaireIntroTitle => 'แบบสอบถาม Q-CHAT-10';
 
   @override
-  String get questionnaireIntroDescription => 'แบบสอบถาม Modified Checklist for Autism in Toddlers (M-CHAT) ช่วยคัดกรองอาการแสดงออทิสติกในเด็กในช่วงแรกเริ่น';
+  String get questionnaireIntroDescription =>
+      'แบบสอบถาม Quantitative Checklist for Autism in Toddlers (Q-CHAT-10) เป็นแบบประเมิน 10 ข้อที่ช่วยคัดกรองความเสี่ยงออทิสติกในเด็กเล็ก';
 
   @override
   String get instruction1 => 'ตอบคำถามเกี่ยวกับพฤติกรรมปกติของบุตรหลานของคุณ';
 
   @override
-  String get instruction2 => 'เลือกตัวเลือกที่อธิบายพฤติกรรมของบุตรหลานของคุณในส่วนใหญ่';
+  String get instruction2 =>
+      'เลือกตัวเลือกที่อธิบายพฤติกรรมของบุตรหลานของคุณในส่วนใหญ่';
 
   @override
-  String get instruction3 => 'หากคุณต้องการออกจากแบบสอบถาม ความคืบหน้าจะถูกบันทึกไว้สำหรับเซสชันนี้';
+  String get instruction3 =>
+      'หากคุณต้องการออกจากแบบสอบถาม ความคืบหน้าจะถูกบันทึกไว้สำหรับเซสชันนี้';
 }

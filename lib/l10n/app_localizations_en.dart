@@ -78,22 +78,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Welcome to ASD Screening';
 
   @override
-  String get welcomeDescription => 'Help identify early signs of autism in children through our comprehensive screening tools';
+  String get welcomeDescription =>
+      'Help identify early signs of autism in children through our comprehensive screening tools';
 
   @override
   String get getStarted => 'Get Started';
 
   @override
-  String get questionnaireTitle => 'M-CHAT Questionnaire';
+  String get questionnaireTitle => 'Q-CHAT-10 Questionnaire';
 
   @override
-  String get questionnaireDescription => 'Modified Checklist for Autism in Toddlers';
+  String get questionnaireDescription =>
+      'Modified Checklist for Autism in Toddlers';
 
   @override
   String get videoAnalysisTitle => 'Video Analysis';
 
   @override
-  String get videoAnalysisDescription => 'Record and analyze your child\'s responses to stimulus videos';
+  String get videoAnalysisDescription =>
+      'Record and analyze your child\'s responses to stimulus videos';
 
   @override
   String get riskAssessment => 'Risk Assessment';
@@ -132,13 +135,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disclaimer => 'Important Disclaimer';
 
   @override
-  String get disclaimerText => 'This screening tool is designed for preliminary assessment only and is not a substitute for professional medical diagnosis. Please consult with a qualified healthcare professional for a comprehensive evaluation and diagnosis.';
+  String get disclaimerText =>
+      'This screening tool is designed for preliminary assessment only and is not a substitute for professional medical diagnosis. Please consult with a qualified healthcare professional for a comprehensive evaluation and diagnosis.';
 
   @override
   String get recordingInstructions => 'Recording Instructions';
 
   @override
-  String get recordingStep1 => '1. Position your child so their face and upper body are visible';
+  String get recordingStep1 =>
+      '1. Position your child so their face and upper body are visible';
 
   @override
   String get recordingStep2 => '2. Ensure good lighting';
@@ -174,7 +179,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analysisFailed => 'Analysis Failed';
 
   @override
-  String get analysisFailedText => 'We couldn\'t analyze the video. Please try again.';
+  String get analysisFailedText =>
+      'We couldn\'t analyze the video. Please try again.';
 
   @override
   String get tryAgain => 'Try Again';
@@ -192,17 +198,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backToHome => 'Back to Home';
 
   @override
-  String get questionnaireIntroTitle => 'M-CHAT Questionnaire';
+  String get questionnaireIntroTitle => 'Q-CHAT-10 Questionnaire';
 
   @override
-  String get questionnaireIntroDescription => 'Modified Checklist for Autism in Toddlers (M-CHAT) helps screen early ASD indicators.';
+  String get questionnaireIntroDescription =>
+      'Quantitative Checklist for Autism in Toddlers (Q-CHAT-10) is a 10-item screening tool for autism risk in toddlers.';
 
   @override
-  String get instruction1 => 'Answer each question about your child\'s typical behavior.';
+  String get instruction1 =>
+      'Answer each question about your child\'s typical behavior.';
 
   @override
-  String get instruction2 => 'Select the option that best describes how your child behaves most of the time.';
+  String get instruction2 =>
+      'Select the option that best describes how your child behaves most of the time.';
 
   @override
-  String get instruction3 => 'If you need to leave, your progress is saved for this session.';
+  String get instruction3 =>
+      'If you need to leave, your progress is saved for this session.';
 }

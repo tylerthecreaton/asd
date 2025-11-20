@@ -53,76 +53,76 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
       body: profileState.status == ProfileStatus.loading
           ? const Center(child: CircularProgressIndicator())
           : profileState.status == ProfileStatus.error
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: AppColors.error,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        profileState.errorMessage ?? 'เกิดข้อผิดพลาด',
-                        style: AppTextStyles.bodyText1,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          ref.read(profileProvider.notifier).refreshProfile();
-                        },
-                        child: const Text('ลองใหม่'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: AppColors.error,
                   ),
-                )
-              : RefreshIndicator(
-                  onRefresh: () async {
-                    await ref.read(profileProvider.notifier).refreshProfile();
-                  },
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Profile Header
-                        const ProfileHeader(),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Statistics Section
-                        _buildStatisticsSection(profileData),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Quick Actions Section
-                        _buildQuickActionsSection(),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Recent Assessments Section
-                        _buildRecentAssessmentsSection(profileData),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Settings Section
-                        _buildSettingsSection(),
-                        
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+                  const SizedBox(height: 16),
+                  Text(
+                    profileState.errorMessage ?? 'เกิดข้อผิดพลาด',
+                    style: AppTextStyles.bodyText1,
+                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.read(profileProvider.notifier).refreshProfile();
+                    },
+                    child: const Text('ลองใหม่'),
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(profileProvider.notifier).refreshProfile();
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Profile Header
+                    const ProfileHeader(),
+
+                    const SizedBox(height: 24),
+
+                    // Statistics Section
+                    _buildStatisticsSection(profileData),
+
+                    const SizedBox(height: 24),
+
+                    // Quick Actions Section
+                    _buildQuickActionsSection(),
+
+                    const SizedBox(height: 24),
+
+                    // Recent Assessments Section
+                    _buildRecentAssessmentsSection(profileData),
+
+                    const SizedBox(height: 24),
+
+                    // Settings Section
+                    _buildSettingsSection(),
+
+                    const SizedBox(height: 32),
+                  ],
                 ),
+              ),
+            ),
     );
   }
 
   Widget _buildStatisticsSection(ProfileData? profileData) {
     if (profileData == null) return const SizedBox.shrink();
-    
+
     final statistics = profileData.statistics;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,7 +150,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onTap: () {
                   // Navigate to assessment history page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์ประวัติการประเมินทั้งหมดจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text(
+                        'ฟีเจอร์ประวัติการประเมินทั้งหมดจะมาในเร็วๆ นี้',
+                      ),
+                    ),
                   );
                 },
               ),
@@ -158,12 +162,16 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
               StatsCard(
                 icon: Icons.quiz,
                 value: statistics.questionnaireCount.toString(),
-                label: 'แบบประเมิน M-CHAT',
+                label: 'แบบประเมิน Q-CHAT-10',
                 color: AppColors.secondary,
                 onTap: () {
-                  // Navigate to M-CHAT history page (placeholder for now)
+                  // Navigate to Q-CHAT-10 history page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์ประวัติการประเมิน M-CHAT จะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text(
+                        'ฟีเจอร์ประวัติการประเมิน Q-CHAT-10 จะมาในเร็วๆ นี้',
+                      ),
+                    ),
                   );
                 },
               ),
@@ -176,7 +184,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onTap: () {
                   // Navigate to video analysis history page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์ประวัติการวิเคราะห์วิดีโอจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text(
+                        'ฟีเจอร์ประวัติการวิเคราะห์วิดีโอจะมาในเร็วๆ นี้',
+                      ),
+                    ),
                   );
                 },
               ),
@@ -237,7 +249,9 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onTap: () {
                   // Navigate to add child profile page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์เพิ่มโปรไฟล์เด็กจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text('ฟีเจอร์เพิ่มโปรไฟล์เด็กจะมาในเร็วๆ นี้'),
+                    ),
                   );
                 },
               ),
@@ -263,18 +277,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 32,
-              color: color,
-            ),
+            Icon(icon, size: 32, color: color),
             const SizedBox(height: 8),
             Text(
               title,
@@ -299,7 +306,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
     if (profileData?.recentAssessments.isEmpty ?? true) {
       return const SizedBox.shrink();
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -319,7 +326,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onPressed: () {
                   // Navigate to full assessment history page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์ประวัติการประเมินทั้งหมดจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text(
+                        'ฟีเจอร์ประวัติการประเมินทั้งหมดจะมาในเร็วๆ นี้',
+                      ),
+                    ),
                   );
                 },
                 child: const Text('ดูทั้งหมด'),
@@ -329,8 +340,9 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
         ),
         const SizedBox(height: 16),
         ...profileData?.recentAssessments.map((assessment) {
-          return _buildAssessmentCard(assessment);
-        }) ?? [],
+              return _buildAssessmentCard(assessment);
+            }) ??
+            [],
       ],
     );
   }
@@ -338,7 +350,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
   Widget _buildAssessmentCard(AssessmentSummary assessment) {
     Color riskColor;
     String riskText;
-    
+
     switch (assessment.riskLevel) {
       case RiskLevel.low:
         riskColor = AppColors.lowRisk;
@@ -353,13 +365,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
         riskText = 'ความเสี่ยงสูง';
         break;
     }
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -472,7 +482,9 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onTap: () {
                   // Navigate to change password page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์เปลี่ยนรหัสผ่านจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text('ฟีเจอร์เปลี่ยนรหัสผ่านจะมาในเร็วๆ นี้'),
+                    ),
                   );
                 },
               ),
@@ -502,7 +514,11 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 onTap: () {
                   // Navigate to privacy policy page (placeholder for now)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ฟีเจอร์นโยบายความเป็นส่วนตัวจะมาในเร็วๆ นี้')),
+                    const SnackBar(
+                      content: Text(
+                        'ฟีเจอร์นโยบายความเป็นส่วนตัวจะมาในเร็วๆ นี้',
+                      ),
+                    ),
                   );
                 },
               ),
@@ -551,10 +567,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
         ),
       ),
       subtitle: subtitle != null
-          ? Text(
-              subtitle,
-              style: AppTextStyles.bodyText2,
-            )
+          ? Text(subtitle, style: AppTextStyles.bodyText2)
           : null,
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
@@ -562,11 +575,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
   }
 
   Widget _buildDivider() {
-    return const Divider(
-      height: 1,
-      indent: 16,
-      endIndent: 16,
-    );
+    return const Divider(height: 1, indent: 16, endIndent: 16);
   }
 
   void _showAboutDialog(BuildContext context) {

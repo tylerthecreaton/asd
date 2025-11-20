@@ -35,7 +35,7 @@ class PdfService {
                 style: pw.TextStyle(font: regularFont, fontSize: 12),
               ),
               pw.Text(
-                'Questionnaire: ${result.questionnaireTitle ?? 'M-CHAT'}',
+                'Questionnaire: ${result.questionnaireTitle ?? 'Q-CHAT-10'}',
                 style: pw.TextStyle(font: regularFont, fontSize: 12),
               ),
               pw.SizedBox(height: 24),
@@ -96,14 +96,26 @@ class PdfService {
     pw.Font regular,
     pw.Font bold,
   ) {
+    // Calculate max possible score (totalQuestions * 2 for Q-CHAT)
+    final maxScore = result.totalQuestions * 2;
+    final percentage = ((result.score / maxScore) * 100).round();
+
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('Score Summary', style: pw.TextStyle(font: bold, fontSize: 16)),
         pw.SizedBox(height: 8),
         pw.Text(
-          'Total Score: ${result.score}/${result.totalQuestions}',
+          'Total Score: ${result.score}/$maxScore ($percentage%)',
           style: pw.TextStyle(font: regular, fontSize: 12),
+        ),
+        pw.Text(
+          'Risk thresholds: Low (0-6), Medium (7-13), High (14+)',
+          style: pw.TextStyle(
+            font: regular,
+            fontSize: 10,
+            color: PdfColors.grey700,
+          ),
         ),
         if (result.flaggedBehaviors.isNotEmpty) ...[
           pw.SizedBox(height: 12),
@@ -149,10 +161,22 @@ class PdfService {
                   style: pw.TextStyle(font: bold, fontSize: 14),
                 ),
                 pw.SizedBox(height: 4),
-                pw.Text(
-                  entry.value.toString(),
-                  style: pw.TextStyle(font: regular, fontSize: 12),
-                ),
+                // Check if value is a list (nextSteps)
+                if (entry.value is List)
+                  ...((entry.value as List).map(
+                    (item) => pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 8, top: 2),
+                      child: pw.Text(
+                        '• ${item.toString()}',
+                        style: pw.TextStyle(font: regular, fontSize: 12),
+                      ),
+                    ),
+                  ))
+                else
+                  pw.Text(
+                    entry.value.toString(),
+                    style: pw.TextStyle(font: regular, fontSize: 12),
+                  ),
               ],
             ),
           ),

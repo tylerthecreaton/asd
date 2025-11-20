@@ -46,7 +46,7 @@ class HomePage extends ConsumerWidget {
 
                 // Feature Cards
                 FeatureCard(
-                  title: 'แบบประเมิน M-CHAT',
+                  title: 'แบบประเมิน Q-CHAT-10',
                   description:
                       'แบบสอบถามคัดกรองภาวะออทิสติกในเด็กอายุ 16-30 เดือน',
                   icon: Icons.quiz,
@@ -106,7 +106,7 @@ class HomePage extends ConsumerWidget {
                       children: assessments.take(3).map((assessment) {
                         final title =
                             assessment.questionnaireTitle ??
-                            'แบบประเมิน M-CHAT';
+                            'แบบประเมิน Q-CHAT-10';
                         return RecentAssessmentItem(
                           title: title,
                           date: _formatDate(assessment.completedAt),
@@ -187,7 +187,7 @@ class HomePage extends ConsumerWidget {
         title: const Text('ช่วยเหลือ'),
         content: const Text(
           'แอปพลิเคชันนี้ใช้สำหรับคัดกรองภาวะออทิสติกในเด็กเล็ก\n\n'
-          '1. แบบประเมิน M-CHAT: ตอบคำถาม 23 ข้อเกี่ยวกับพฤติกรรมของเด็ก\n\n'
+          '1. แบบประเมิน Q-CHAT-10: ตอบคำถาม 10 ข้อเกี่ยวกับพฤติกรรมและการสื่อสารของเด็ก\n\n'
           '2. วิเคราะห์วิดีโอ: บันทึกวิดีโอขณะเด็กดูวิดีโอกระตุ้น\n\n'
           'หากต้องการความช่วยเหลือเพิ่มเติม กรุณาติดต่อผู้ดูแลระบบ',
         ),
@@ -244,7 +244,7 @@ class HomePage extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'เริ่มทำแบบประเมิน M-CHAT เพื่อดูผลลัพธ์ล่าสุดของคุณ',
+              'เริ่มทำแบบประเมิน Q-CHAT-10 เพื่อดูผลลัพธ์ล่าสุดของคุณ',
               style: AppTextStyles.caption,
             ),
           ],

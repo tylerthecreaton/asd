@@ -1,47 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { mchatQuestionnaire } from "./seed-data/mchat.js";
 import { qchatQuestionnaire } from "./seed-data/qchat.js";
 
 const prisma = new PrismaClient();
-
-async function seedMChatQuestionnaire() {
-  const questionnaire = await prisma.questionnaire.upsert({
-    where: { slug: mchatQuestionnaire.slug },
-    update: {
-      title: mchatQuestionnaire.title,
-      description: mchatQuestionnaire.description,
-      passingScore: mchatQuestionnaire.passingScore,
-      type: "standard",
-      maxScore: mchatQuestionnaire.questions.length,
-    },
-    create: {
-      slug: mchatQuestionnaire.slug,
-      title: mchatQuestionnaire.title,
-      description: mchatQuestionnaire.description,
-      passingScore: mchatQuestionnaire.passingScore,
-      type: "standard",
-      maxScore: mchatQuestionnaire.questions.length,
-    },
-  });
-
-  await prisma.question.deleteMany({
-    where: { questionnaireId: questionnaire.id },
-  });
-
-  await prisma.question.createMany({
-    data: mchatQuestionnaire.questions.map((question) => ({
-      questionnaireId: questionnaire.id,
-      externalId: question.externalId,
-      text: question.text,
-      description: question.description ?? null,
-      optionsJson: JSON.stringify(question.options),
-      correctAnswerIndex: question.correctAnswerIndex,
-      displayOrder: question.displayOrder,
-      scoringType: "binary",
-      maxPoints: 1,
-    })),
-  });
-}
 
 async function seedQChatQuestionnaire() {
   const questionnaire = await prisma.questionnaire.upsert({
@@ -51,7 +11,7 @@ async function seedQChatQuestionnaire() {
       description: qchatQuestionnaire.description,
       type: qchatQuestionnaire.type,
       maxScore: qchatQuestionnaire.maxScore,
-      passingScore: 30, // Medium risk threshold
+      passingScore: 13, // Medium risk threshold for Q-CHAT-10
     },
     create: {
       slug: qchatQuestionnaire.slug,
@@ -59,7 +19,7 @@ async function seedQChatQuestionnaire() {
       description: qchatQuestionnaire.description,
       type: qchatQuestionnaire.type,
       maxScore: qchatQuestionnaire.maxScore,
-      passingScore: 30, // Medium risk threshold
+      passingScore: 13, // Medium risk threshold for Q-CHAT-10
     },
   });
 
@@ -74,7 +34,7 @@ async function seedQChatQuestionnaire() {
       text: question.text,
       description: question.description ?? null,
       optionsJson: JSON.stringify(question.options),
-      correctAnswerIndex: 0, // Not used in Q-CHAT
+      correctAnswerIndex: 2, // Q-CHAT uses reverse scoring: "Usually/Always" (index 2) = typical development
       displayOrder: question.displayOrder,
       scoringType: question.scoringType,
       maxPoints: question.maxPoints,
@@ -83,7 +43,6 @@ async function seedQChatQuestionnaire() {
 }
 
 async function main() {
-  await seedMChatQuestionnaire();
   await seedQChatQuestionnaire();
 }
 

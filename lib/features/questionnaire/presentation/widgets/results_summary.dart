@@ -108,6 +108,10 @@ class _ScoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Calculate max possible score (totalQuestions * 2 for Q-CHAT)
+    final maxScore = result.totalQuestions * 2;
+    final percentage = ((result.score / maxScore) * 100).round();
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -119,14 +123,14 @@ class _ScoreCard extends StatelessWidget {
                 children: [
                   Text('Total Score', style: theme.textTheme.titleSmall),
                   Text(
-                    '${result.score}/${result.totalQuestions}',
+                    '${result.score}/$maxScore',
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Passing threshold: ${result.totalQuestions - 3}+ correct answers',
+                    'Risk thresholds: Low (0-6), Medium (7-13), High (14+)',
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -135,15 +139,16 @@ class _ScoreCard extends StatelessWidget {
             Column(
               children: [
                 _ScoreBadge(
-                  label: 'Correct',
-                  value: result.totalQuestions - result.score,
-                  color: Colors.green,
+                  label: 'Score',
+                  value: result.score,
+                  color: _getScoreColor(result.score),
                 ),
                 const SizedBox(height: 8),
                 _ScoreBadge(
-                  label: 'Flagged',
-                  value: result.score,
-                  color: Colors.redAccent,
+                  label: 'Percentage',
+                  value: percentage,
+                  color: Colors.blue,
+                  suffix: '%',
                 ),
               ],
             ),
@@ -152,6 +157,12 @@ class _ScoreCard extends StatelessWidget {
       ),
     );
   }
+
+  Color _getScoreColor(int score) {
+    if (score <= 6) return Colors.green;
+    if (score <= 13) return Colors.orange;
+    return Colors.red;
+  }
 }
 
 class _ScoreBadge extends StatelessWidget {
@@ -159,11 +170,13 @@ class _ScoreBadge extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.suffix = '',
   });
 
   final String label;
   final int value;
   final Color color;
+  final String suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +189,7 @@ class _ScoreBadge extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '$value',
+            '$value$suffix',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: color,
               fontWeight: FontWeight.bold,
@@ -275,10 +288,30 @@ class _RecommendationsCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      entry.value.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                    // Check if value is a list (nextSteps)
+                    if (entry.value is List)
+                      ...(entry.value as List).map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('• ', style: TextStyle(fontSize: 16)),
+                              Expanded(
+                                child: Text(
+                                  item.toString(),
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      Text(
+                        entry.value.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                   ],
                 ),
               ),
