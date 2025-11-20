@@ -41,15 +41,23 @@ class QuestionnaireResultsPage extends ConsumerWidget {
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ResultsSummary(result: result),
-                const SizedBox(height: 24),
-                _buildDisclaimer(context),
-                const SizedBox(height: 24),
-                _buildActionButtons(context, ref, result),
+                _buildHeader(context, result),
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ResultsSummary(result: result),
+                      const SizedBox(height: 32),
+                      _buildDisclaimer(context),
+                      const SizedBox(height: 32),
+                      _buildActionButtons(context, ref, result),
+                    ],
+                  ),
+                ),
               ],
             ),
           );
@@ -68,24 +76,37 @@ class QuestionnaireResultsPage extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.assignment_outlined,
-              size: 64,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No assessment results available yet.',
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Complete the questionnaire to view your child\'s assessment summary.',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.assignment_outlined,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const SizedBox(height: 24),
+            Text(
+              'No assessment results available yet.',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Complete the questionnaire to view your child\'s assessment summary.',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
             CustomButton(
               text: 'Start Questionnaire',
               onPressed: () => context.go(RouteConstants.questionnaireIntro),
@@ -96,38 +117,88 @@ class QuestionnaireResultsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildDisclaimer(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Important Disclaimer',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'This screening tool is designed for preliminary assessment only and '
-              'is not a substitute for professional medical diagnosis. '
-              'Please consult with a qualified healthcare professional for a '
-              'comprehensive evaluation and diagnosis.',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
+  Widget _buildHeader(BuildContext context, AssessmentResult result) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 48, 24, 48),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
         ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.assessment_rounded,
+            size: 64,
+            color: colorScheme.onPrimaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Assessment Complete',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Here is the summary of the evaluation',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisclaimer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Important Disclaimer',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'This screening tool is designed for preliminary assessment only and '
+            'is not a substitute for professional medical diagnosis. '
+            'Please consult with a qualified healthcare professional for a '
+            'comprehensive evaluation and diagnosis.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -137,26 +208,32 @@ class QuestionnaireResultsPage extends ConsumerWidget {
     WidgetRef ref,
     AssessmentResult result,
   ) {
-    return Column(
-      children: [
-        CustomButton(
-          text: 'Download PDF Report',
-          icon: const Icon(Icons.download),
-          onPressed: () => _downloadPdf(context, result),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomButton(
+              text: 'Download PDF Report',
+              icon: const Icon(Icons.download),
+              onPressed: () => _downloadPdf(context, result),
+            ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'View Recommendations',
+              buttonType: ButtonType.outlined,
+              onPressed: () => _viewRecommendations(context, result),
+            ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'Return to Home',
+              buttonType: ButtonType.text,
+              onPressed: () => context.go(RouteConstants.home),
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
-        CustomButton(
-          text: 'View Recommendations',
-          buttonType: ButtonType.outlined,
-          onPressed: () => _viewRecommendations(context, result),
-        ),
-        const SizedBox(height: 12),
-        CustomButton(
-          text: 'Return to Home',
-          buttonType: ButtonType.text,
-          onPressed: () => context.go(RouteConstants.home),
-        ),
-      ],
+      ),
     );
   }
 
