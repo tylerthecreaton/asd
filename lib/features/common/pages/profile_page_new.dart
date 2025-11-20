@@ -165,14 +165,7 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 label: 'แบบประเมิน Q-CHAT-10',
                 color: AppColors.secondary,
                 onTap: () {
-                  // Navigate to Q-CHAT-10 history page (placeholder for now)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'ฟีเจอร์ประวัติการประเมิน Q-CHAT-10 จะมาในเร็วๆ นี้',
-                      ),
-                    ),
-                  );
+                  context.push(RouteConstants.assessmentHistory);
                 },
               ),
               const SizedBox(width: 16),
