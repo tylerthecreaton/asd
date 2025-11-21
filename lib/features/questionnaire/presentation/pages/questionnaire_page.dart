@@ -16,7 +16,9 @@ import '../widgets/progress_indicator.dart';
 import '../widgets/question_card.dart';
 
 class QuestionnairePage extends ConsumerStatefulWidget {
-  const QuestionnairePage({super.key});
+  const QuestionnairePage({super.key, this.fromCombinedScreening = false});
+
+  final bool fromCombinedScreening;
 
   @override
   ConsumerState<QuestionnairePage> createState() => _QuestionnairePageState();
@@ -275,7 +277,13 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
           await _clearSavedProgress(questionnaireId);
         }
         if (!mounted) return;
-        context.go(RouteConstants.questionnaireResults, extra: assessment);
+        context.go(
+          RouteConstants.questionnaireResults,
+          extra: {
+            'result': assessment,
+            'fromCombinedScreening': widget.fromCombinedScreening,
+          },
+        );
       },
     );
   }

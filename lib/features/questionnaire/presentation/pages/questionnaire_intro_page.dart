@@ -9,7 +9,9 @@ import '../../../common/widgets/custom_button.dart';
 import '../providers/questionnaire_provider.dart';
 
 class QuestionnaireIntroPage extends ConsumerWidget {
-  const QuestionnaireIntroPage({super.key});
+  const QuestionnaireIntroPage({super.key, this.fromCombinedScreening = false});
+
+  final bool fromCombinedScreening;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,7 +106,8 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                                   children: [
                                     Wrap(
                                       alignment: WrapAlignment.center,
-                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.info_outline,
@@ -173,7 +176,12 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                             .read(questionnaireProvider.notifier)
                             .resetQuestionnaire();
                         if (context.mounted) {
-                          context.go(RouteConstants.questionnaire);
+                          context.go(
+                            RouteConstants.questionnaire,
+                            extra: fromCombinedScreening
+                                ? {'fromCombinedScreening': true}
+                                : null,
+                          );
                         }
                       },
                     ),

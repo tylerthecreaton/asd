@@ -12,9 +12,14 @@ import '../providers/questionnaire_provider.dart';
 import '../widgets/results_summary.dart';
 
 class QuestionnaireResultsPage extends ConsumerWidget {
-  const QuestionnaireResultsPage({super.key, this.initialResult});
+  const QuestionnaireResultsPage({
+    super.key,
+    this.initialResult,
+    this.fromCombinedScreening = false,
+  });
 
   final AssessmentResult? initialResult;
+  final bool fromCombinedScreening;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -214,6 +219,16 @@ class QuestionnaireResultsPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Show video analysis button if coming from combined screening
+            if (fromCombinedScreening) ...[
+              CustomButton(
+                text: 'ดำเนินการคัดกรองวิดีโอต่อ',
+                icon: const Icon(Icons.videocam),
+                onPressed: () =>
+                    context.push(RouteConstants.videoAnalysisIntro),
+              ),
+              const SizedBox(height: 16),
+            ],
             CustomButton(
               text: 'Download PDF Report',
               icon: const Icon(Icons.download),

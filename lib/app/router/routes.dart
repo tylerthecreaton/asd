@@ -79,19 +79,43 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: RouteConstants.questionnaireIntro,
     name: 'questionnaireIntro',
-    builder: (context, state) => const QuestionnaireIntroPage(),
+    builder: (context, state) {
+      final extra = state.extra as Map<String, dynamic>?;
+      final fromCombinedScreening =
+          extra?['fromCombinedScreening'] as bool? ?? false;
+      return QuestionnaireIntroPage(
+        fromCombinedScreening: fromCombinedScreening,
+      );
+    },
   ),
   GoRoute(
     path: RouteConstants.questionnaire,
     name: 'questionnaire',
-    builder: (context, state) => const QuestionnairePage(),
+    builder: (context, state) {
+      final extra = state.extra as Map<String, dynamic>?;
+      final fromCombinedScreening =
+          extra?['fromCombinedScreening'] as bool? ?? false;
+      return QuestionnairePage(fromCombinedScreening: fromCombinedScreening);
+    },
   ),
   GoRoute(
     path: RouteConstants.questionnaireResults,
     name: 'questionnaireResults',
     builder: (context, state) {
-      final result = state.extra as AssessmentResult?;
-      return QuestionnaireResultsPage(initialResult: result);
+      final extra = state.extra;
+      if (extra is Map<String, dynamic>) {
+        final result = extra['result'] as AssessmentResult?;
+        final fromCombinedScreening =
+            extra['fromCombinedScreening'] as bool? ?? false;
+        return QuestionnaireResultsPage(
+          initialResult: result,
+          fromCombinedScreening: fromCombinedScreening,
+        );
+      } else if (extra is AssessmentResult) {
+        // Backward compatibility
+        return QuestionnaireResultsPage(initialResult: extra);
+      }
+      return const QuestionnaireResultsPage();
     },
   ),
   GoRoute(

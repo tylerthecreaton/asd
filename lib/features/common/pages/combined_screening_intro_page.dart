@@ -222,8 +222,11 @@ class CombinedScreeningIntroPage extends StatelessWidget {
                   text: 'เริ่มการคัดกรอง',
                   width: double.infinity,
                   onPressed: () {
-                    // Navigate to Q-CHAT first
-                    context.push(RouteConstants.questionnaireIntro);
+                    // Navigate to Q-CHAT first with fromCombinedScreening flag
+                    context.push(
+                      RouteConstants.questionnaireIntro,
+                      extra: {'fromCombinedScreening': true},
+                    );
                   },
                   icon: const Icon(
                     Icons.arrow_forward,
