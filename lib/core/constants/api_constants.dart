@@ -1,13 +1,24 @@
-class ApiConstants {
-  static const String backendBaseUrl = String.fromEnvironment(
-    'BACKEND_BASE_URL',
-    defaultValue: 'http://10.0.2.2:4000/api',
-  );
+import 'dart:io';
 
-  static const String videoAnalysisBaseUrl = String.fromEnvironment(
-    'VIDEO_ANALYSIS_BASE_URL',
-    defaultValue: backendBaseUrl,
-  );
+class ApiConstants {
+  static String get backendBaseUrl {
+    const envUrl = String.fromEnvironment('BACKEND_BASE_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:4000/api';
+    }
+    return 'http://127.0.0.1:4000/api';
+  }
+
+  static String get videoAnalysisBaseUrl {
+    const envUrl = String.fromEnvironment('VIDEO_ANALYSIS_BASE_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    return backendBaseUrl;
+  }
 
   static const String authLoginPath = '/auth/login';
   static const String authRegisterPath = '/auth/register';
