@@ -213,6 +213,17 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
           child: Row(
             children: [
               _buildQuickActionCard(
+                icon: Icons.assessment,
+                title: 'คัดกรองแบบรวม',
+                subtitle: 'Q-CHAT + วิดีโอ',
+                color: AppColors.warning,
+                onTap: () {
+                  // Navigate to combined screening intro page
+                  context.push(RouteConstants.combinedScreeningIntro);
+                },
+              ),
+              const SizedBox(width: 16),
+              _buildQuickActionCard(
                 icon: Icons.quiz,
                 title: 'ทำแบบประเมิน',
                 subtitle: 'Q-CHAT',
@@ -473,12 +484,8 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 icon: Icons.lock_outline,
                 title: 'เปลี่ยนรหัสผ่าน',
                 onTap: () {
-                  // Navigate to change password page (placeholder for now)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('ฟีเจอร์เปลี่ยนรหัสผ่านจะมาในเร็วๆ นี้'),
-                    ),
-                  );
+                  // Navigate to change password page
+                  context.push(RouteConstants.changePassword);
                 },
               ),
               _buildDivider(),

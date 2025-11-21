@@ -10,6 +10,11 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> signIn(String email, String password);
   Future<AuthResponseModel> signUp(String email, String password, String? name);
   Future<UserModel> getCurrentUser();
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+    String confirmPassword,
+  );
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -95,5 +100,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     }
     return error.message ?? 'Network error';
+  }
+
+  @override
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+    String confirmPassword,
+  ) async {
+    try {
+      await _apiClient.post(
+        ApiConstants.authChangePasswordPath,
+        data: {
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPassword,
+        },
+      );
+    } on DioException catch (error) {
+      throw ServerException(message: _resolveErrorMessage(error));
+    } catch (error) {
+      throw const ServerException(
+        message: 'Unexpected error during password change',
+      );
+    }
   }
 }

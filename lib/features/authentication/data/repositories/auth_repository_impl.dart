@@ -81,4 +81,25 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.message ?? 'Failed to get current user'));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> changePassword(
+    String currentPassword,
+    String newPassword,
+    String confirmPassword,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure('No internet connection'));
+    }
+    try {
+      await remoteDataSource.changePassword(
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      );
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message ?? 'Failed to change password'));
+    }
+  }
 }

@@ -44,6 +44,20 @@ class HomePage extends ConsumerWidget {
 
                 const SizedBox(height: 16),
 
+                FeatureCard(
+                  title: 'การคัดกรองแบบรวม',
+                  description:
+                      'คัดกรองด้วย Q-CHAT และวิเคราะห์วิดีโอพร้อมกัน เพื่อผลที่แม่นยำ',
+                  icon: Icons.assessment,
+                  iconColor: AppColors.warning,
+                  onTap: () {
+                    context.push(RouteConstants.combinedScreeningIntro);
+                  },
+                  badge: 'ใช้เวลา 25 นาที',
+                ),
+
+                const SizedBox(height: 16),
+
                 // Feature Cards
                 FeatureCard(
                   title: 'แบบประเมิน Q-CHAT-10',

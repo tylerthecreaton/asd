@@ -5,6 +5,7 @@ class RouteConstants {
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
+  static const String combinedScreeningIntro = '/combined-screening/intro';
   static const String questionnaireIntro = '/questionnaire/intro';
   static const String questionnaire = '/questionnaire';
   static const String questionnaireResults = '/questionnaire/results';
@@ -14,6 +15,7 @@ class RouteConstants {
   static const String videoAnalysisResults = '/video-analysis/results';
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
+  static const String changePassword = '/change-password';
   static const String settings = '/settings';
   static const String assessmentHistory = '/assessment-history';
 }

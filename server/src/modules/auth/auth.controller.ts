@@ -4,7 +4,11 @@ import { User } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { hashPassword, verifyPassword } from "../../utils/password.js";
 import { generateAccessToken } from "../../utils/token.js";
-import { loginSchema, registerSchema } from "./auth.validators.js";
+import {
+  loginSchema,
+  registerSchema,
+  changePasswordSchema,
+} from "./auth.validators.js";
 
 const toPublicUser = (user: User) => ({
   id: user.id,
@@ -199,6 +203,58 @@ export const getUserStats = async (
         },
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.userId) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Authentication required" });
+    }
+
+    const payload = changePasswordSchema.parse(req.body);
+
+    // Get current user
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+    });
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "User not found" });
+    }
+
+    // Verify current password
+    const isValidPassword = await verifyPassword(
+      payload.currentPassword,
+      user.passwordHash
+    );
+
+    if (!isValidPassword) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const newPasswordHash = await hashPassword(payload.newPassword);
+
+    // Update password
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { passwordHash: newPasswordHash },
+    });
+
+    res.json({ message: "Password changed successfully" });
   } catch (error) {
     next(error);
   }

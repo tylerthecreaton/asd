@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/route_constants.dart';
 import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/authentication/presentation/pages/register_page.dart';
+import '../../features/common/pages/change_password_page.dart';
+import '../../features/common/pages/combined_screening_intro_page.dart';
 import '../../features/common/pages/home_page.dart';
 import '../../features/common/pages/onboarding_page.dart';
 // import '../../features/common/pages/profile_page.dart';
@@ -58,9 +60,19 @@ final List<GoRoute> appRoutes = [
     builder: (context, state) => const EditProfilePage(),
   ),
   GoRoute(
+    path: RouteConstants.changePassword,
+    name: 'changePassword',
+    builder: (context, state) => const ChangePasswordPage(),
+  ),
+  GoRoute(
     path: RouteConstants.settings,
     name: 'settings',
     builder: (context, state) => const SettingsPage(),
+  ),
+  GoRoute(
+    path: RouteConstants.combinedScreeningIntro,
+    name: 'combinedScreeningIntro',
+    builder: (context, state) => const CombinedScreeningIntroPage(),
   ),
   GoRoute(
     path: RouteConstants.questionnaireIntro,

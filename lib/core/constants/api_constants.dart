@@ -13,6 +13,7 @@ class ApiConstants {
   static const String authRegisterPath = '/auth/register';
   static const String authProfilePath = '/auth/me';
   static const String authStatsPath = '/auth/stats';
+  static const String authChangePasswordPath = '/auth/change-password';
 
   static const String questionnairesPath = '/questionnaires';
   static String questionnaireDetailPath(String identifier) =>

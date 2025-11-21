@@ -157,6 +157,62 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void clearError() {
     state = state.copyWith(errorMessage: null);
   }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    if (currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      );
+      return false;
+    }
+
+    if (newPassword != confirmPassword) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'รหัสผ่านใหม่ไม่ตรงกัน',
+      );
+      return false;
+    }
+
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    final result = await _authRepository.changePassword(
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    );
+
+    return result.fold(
+      (failure) {
+        String errorMessage = 'เปลี่ยนรหัสผ่านไม่สำเร็จ';
+
+        if (failure.message.toLowerCase().contains('incorrect') ||
+            failure.message.toLowerCase().contains('wrong')) {
+          errorMessage = 'รหัสผ่านปัจจุบันไม่ถูกต้อง';
+        } else if (failure.message.toLowerCase().contains('network') ||
+            failure.message.toLowerCase().contains('connection')) {
+          errorMessage =
+              'ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้ กรุณาลองใหม่อีกครั้ง';
+        } else if (failure.message.isNotEmpty) {
+          errorMessage = failure.message;
+        }
+
+        state = state.copyWith(isLoading: false, errorMessage: errorMessage);
+        return false;
+      },
+      (_) {
+        state = state.copyWith(isLoading: false, errorMessage: null);
+        return true;
+      },
+    );
+  }
 }
 
 /// Provider for authentication

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
-// import '../../../core/constants/route_constants.dart';
+import '../../../core/constants/route_constants.dart';
 // import '../../authentication/presentation/providers/providers.dart';
 import '../presentation/providers/providers.dart';
 
@@ -26,7 +26,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     super.initState();
     final profileData = ref.read(profileProvider).data;
     final user = profileData?.user;
-    
+
     _nameController = TextEditingController(text: user?.name ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
   }
@@ -46,10 +46,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     });
 
     try {
-      await ref.read(profileProvider.notifier).updateProfile(
-        name: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-      );
+      await ref
+          .read(profileProvider.notifier)
+          .updateProfile(
+            name: _nameController.text.trim(),
+            email: _emailController.text.trim(),
+          );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -128,9 +130,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   children: [
                     // Profile Picture Section
                     _buildProfilePictureSection(user),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Name Field
                     Text(
                       'ชื่อ',
@@ -153,7 +155,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColors.primary),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                          ),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -170,9 +174,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         return null;
                       },
                     ),
-                    
+
                     const SizedBox(height: 20),
-                    
+
                     // Email Field
                     Text(
                       'อีเมล',
@@ -196,7 +200,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColors.primary),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                          ),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -211,23 +217,25 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           return 'กรุณากรอกอีเมล';
                         }
                         // Simple email validation
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value)) {
                           return 'กรุณากรอกอีเมลให้ถูกต้อง';
                         }
                         return null;
                       },
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Account Information
                     _buildAccountInfoSection(user),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Danger Zone
                     _buildDangerZone(),
-                    
+
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -246,16 +254,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.primary,
-                width: 3,
-              ),
+              border: Border.all(color: AppColors.primary, width: 3),
             ),
-            child: const Icon(
-              Icons.person,
-              size: 60,
-              color: AppColors.primary,
-            ),
+            child: const Icon(Icons.person, size: 60, color: AppColors.primary),
           ),
           const SizedBox(height: 16),
           TextButton.icon(
@@ -269,9 +270,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             },
             icon: const Icon(Icons.camera_alt),
             label: const Text('เปลี่ยนรูปโปรไฟล์'),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.primary,
-            ),
+            style: TextButton.styleFrom(foregroundColor: AppColors.primary),
           ),
         ],
       ),
@@ -281,9 +280,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Widget _buildAccountInfoSection(user) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -331,12 +328,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           ),
         ),
         const Text(': '),
-        Expanded(
-          child: Text(
-            value,
-            style: AppTextStyles.bodyText2,
-          ),
-        ),
+        Expanded(child: Text(value, style: AppTextStyles.bodyText2)),
       ],
     );
   }
@@ -346,9 +338,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: AppColors.error.withValues(alpha: 0.3),
-        ),
+        side: BorderSide(color: AppColors.error.withValues(alpha: 0.3)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -364,27 +354,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: const Icon(
-                Icons.lock,
-                color: AppColors.error,
-              ),
+              leading: const Icon(Icons.lock, color: AppColors.error),
               title: const Text('เปลี่ยนรหัสผ่าน'),
               subtitle: const Text('เปลี่ยนรหัสผ่านของคุณ'),
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('ฟีเจอร์เปลี่ยนรหัสผ่านจะมาในเร็วๆ นี้'),
-                    backgroundColor: AppColors.info,
-                  ),
-                );
+                // Navigate to change password page
+                context.push(RouteConstants.changePassword);
               },
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(
-                Icons.delete_forever,
-                color: AppColors.error,
-              ),
+              leading: const Icon(Icons.delete_forever, color: AppColors.error),
               title: const Text('ลบบัญชี'),
               subtitle: const Text('ลบบัญชีและข้อมูลทั้งหมดถาวร'),
               onTap: () {
@@ -403,7 +383,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       builder: (context) => AlertDialog(
         title: const Text('ลบบัญชี'),
         content: const Text(
-          'การดำเนินการนี้ไม่สามารถย้อนกลับได้\n\n'
+          'การดำเนินการนี้ไม่สามารถย้อนกลับได้\\n\\n'
           'คุณต้องการลบบัญชีและข้อมูลทั้งหมดหรือไม่?',
         ),
         actions: [
