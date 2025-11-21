@@ -160,9 +160,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   icon: Icons.description_outlined,
                   title: 'เงื่อนไขการใช้งาน',
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ฟีเจอร์กำลังพัฒนา')),
-                    );
+                    context.push(RouteConstants.termsOfService);
                   },
                 ),
                 _SettingsTile(
