@@ -11,6 +11,7 @@ import '../../features/common/pages/onboarding_page.dart';
 // import '../../features/common/pages/profile_page.dart';
 import '../../features/common/pages/profile_page_new.dart';
 import '../../features/common/pages/edit_profile_page.dart';
+import '../../features/common/pages/privacy_policy_page.dart';
 import '../../features/common/pages/settings_page.dart';
 import '../../features/common/pages/splash_page.dart';
 import '../../features/questionnaire/domain/entities/assessment_result.dart';
@@ -128,6 +129,11 @@ final List<GoRoute> appRoutes = [
     path: RouteConstants.assessmentHistory,
     name: 'assessmentHistory',
     builder: (context, state) => const AssessmentHistoryPage(),
+  ),
+  GoRoute(
+    path: RouteConstants.privacyPolicy,
+    name: 'privacyPolicy',
+    builder: (context, state) => const PrivacyPolicyPage(),
   ),
   // Additional routes will be added in subsequent phases
 ];

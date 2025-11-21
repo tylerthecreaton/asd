@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/constants/route_constants.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -167,9 +169,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   icon: Icons.privacy_tip_outlined,
                   title: 'นโยบายความเป็นส่วนตัว',
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ฟีเจอร์กำลังพัฒนา')),
-                    );
+                    context.push(RouteConstants.privacyPolicy);
                   },
                 ),
               ],

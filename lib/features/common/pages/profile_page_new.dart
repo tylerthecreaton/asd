@@ -512,14 +512,8 @@ class _ProfilePageNewState extends ConsumerState<ProfilePageNew> {
                 icon: Icons.privacy_tip_outlined,
                 title: 'นโยบายความเป็นส่วนตัว',
                 onTap: () {
-                  // Navigate to privacy policy page (placeholder for now)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'ฟีเจอร์นโยบายความเป็นส่วนตัวจะมาในเร็วๆ นี้',
-                      ),
-                    ),
-                  );
+                  // Navigate to privacy policy page
+                  context.push(RouteConstants.privacyPolicy);
                 },
               ),
               _buildDivider(),

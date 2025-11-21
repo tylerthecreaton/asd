@@ -17,5 +17,6 @@ class RouteConstants {
   static const String editProfile = '/profile/edit';
   static const String changePassword = '/change-password';
   static const String settings = '/settings';
+  static const String privacyPolicy = '/privacy-policy';
   static const String assessmentHistory = '/assessment-history';
 }
