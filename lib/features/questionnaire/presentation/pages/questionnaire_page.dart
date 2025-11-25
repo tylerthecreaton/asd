@@ -394,7 +394,8 @@ class _QuestionnairePageState extends ConsumerState<QuestionnairePage>
               },
             ),
             actions: [
-              if (questionnaire.type == 'qchat')
+              if (questionnaire.type == 'qchat' ||
+                  questionnaire.type.startsWith('qchat'))
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Row(

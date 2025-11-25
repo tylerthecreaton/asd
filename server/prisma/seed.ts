@@ -11,7 +11,7 @@ async function seedQChatQuestionnaire() {
       description: qchatQuestionnaire.description,
       type: qchatQuestionnaire.type,
       maxScore: qchatQuestionnaire.maxScore,
-      passingScore: 13, // Medium risk threshold for Q-CHAT-10
+      passingScore: 4, // Medium risk threshold for Q-CHAT-10 (binary scoring)
     },
     create: {
       slug: qchatQuestionnaire.slug,
@@ -19,7 +19,7 @@ async function seedQChatQuestionnaire() {
       description: qchatQuestionnaire.description,
       type: qchatQuestionnaire.type,
       maxScore: qchatQuestionnaire.maxScore,
-      passingScore: 13, // Medium risk threshold for Q-CHAT-10
+      passingScore: 4, // Medium risk threshold for Q-CHAT-10 (binary scoring)
     },
   });
 
@@ -34,7 +34,7 @@ async function seedQChatQuestionnaire() {
       text: question.text,
       description: question.description ?? null,
       optionsJson: JSON.stringify(question.options),
-      correctAnswerIndex: 2, // Q-CHAT uses reverse scoring: "Usually/Always" (index 2) = typical development
+      correctAnswerIndex: 1, // Q-CHAT uses reverse scoring: "ใช่" (index 1) = typical development
       displayOrder: question.displayOrder,
       scoringType: question.scoringType,
       maxPoints: question.maxPoints,

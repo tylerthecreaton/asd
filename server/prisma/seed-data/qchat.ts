@@ -6,6 +6,7 @@ export type QChatSeedQuestion = {
   maxPoints: number;
   displayOrder: number;
   description?: string | null;
+  // แนะนำ: คุณอาจต้องเพิ่ม field เช่น 'riskAnswer' เพื่อบอกว่าตอบข้อไหนแล้วได้คะแนน
 };
 
 export type QChatSeedQuestionnaire = {
@@ -18,85 +19,98 @@ export type QChatSeedQuestionnaire = {
 };
 
 const qChatQuestions: Omit<QChatSeedQuestion, "displayOrder">[] = [
+  // --- กลุ่มการสื่อสารและสังคม (ตอบ "ไม่ใช่" = เสี่ยง/ได้แต้ม) ---
   {
     externalId: "q1",
-    text: "ลูกของคุณชอบให้คนอื่นสัมผัสตัวหรือกอดหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "เมื่อคุณเรียกชื่อ ลูกหันมามองคุณหรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
   {
     externalId: "q2",
-    text: "ลูกของคุณแสดงความสนใจต่อคนรอบข้างหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกสบตาคุณได้ง่ายดาย เวลาพูดคุยหรือเล่นด้วยกันหรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
+
+  // --- กลุ่มพฤติกรรมซ้ำๆ (ตอบ "ใช่" = เสี่ยง/ได้แต้ม) ---
   {
     externalId: "q3",
-    text: "ลูกของคุณใช้การชี้เพื่อบอกความต้องการหรือสิ่งที่อยากได้หรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกชอบนำสิ่งของมาเรียงต่อกันเป็นแถวๆ หรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ใช่ (*ข้อนี้กลับด้าน*)
+    scoringType: "qchat_reverse",
+    maxPoints: 1,
   },
+
+  // --- กลับมากลุ่มปกติ ---
   {
     externalId: "q4",
-    text: "ลูกของคุณนำสิ่งของมาให้เพื่อแสดงหรือแบ่งปันกับคุณหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "คนอื่นๆ ฟังสิ่งที่ลูกพูดรู้เรื่อง หรือเข้าใจสิ่งที่ลูกสื่อสารหรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
   {
     externalId: "q5",
-    text: "ลูกของคุณสามารถมองตามสายตาที่คุณมองไปหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกใช้นิ้วชี้เพื่อบอกความต้องการ (เช่น ชี้ขอนม ชี้ของที่อยากได้) หรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
   {
     externalId: "q6",
-    text: "ลูกของคุณเลียนแบบการกระทำของคุณ เช่น ท่าทางหรือการเล่นต่างๆ หรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกใช้นิ้วชี้เพื่อชวนให้คุณดูสิ่งที่เขาสนใจ (เช่น ชี้ให้ดูเครื่องบิน ชี้ให้ดูแมว) หรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
+
+  // --- กลุ่มพฤติกรรมซ้ำๆ ---
   {
     externalId: "q7",
-    text: "ลูกของคุณตอบสนองเมื่อคุณเรียกชื่อเขาหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกชอบขยับนิ้วมือในลักษณะแปลกๆ ใกล้ๆ ดวงตาของเขาหรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ใช่ (*ข้อนี้กลับด้าน*)
+    scoringType: "qchat_reverse",
+    maxPoints: 1,
   },
+
+  // --- กลับมากลุ่มปกติ ---
   {
     externalId: "q8",
-    text: "เมื่อคุณยิ้มให้ ลูกของคุณยิ้มตอบหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกเล่นบทบาทสมมติเป็นหรือไม่ (เช่น ป้อนข้าวตุ๊กตา, คุยโทรศัพท์ของเล่น)?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
+
+  // --- กลุ่มพฤติกรรมซ้ำๆ ---
   {
     externalId: "q9",
-    text: "ลูกของคุณแสดงอารมณ์หรือความรู้สึกเมื่ออยู่ใกล้คุณหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "ลูกชอบจ้องมองไปยังความว่างเปล่า หรือมองอย่างไร้จุดหมายบ่อยๆ หรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ใช่ (*ข้อนี้กลับด้าน*)
+    scoringType: "qchat_reverse",
+    maxPoints: 1,
   },
+
+  // --- กลับมากลุ่มปกติ ---
   {
     externalId: "q10",
-    text: "ลูกของคุณชอบเล่นหรือทำกิจกรรมร่วมกับคุณหรือไม่?",
-    options: ["ไม่เคย/น้อยมาก", "บางครั้ง", "มักจะ/เสมอ"],
-    scoringType: "qchat",
-    maxPoints: 2,
+    text: "เมื่อลูกเจอสิ่งแปลกใหม่ ลูกหันกลับมามองหน้าคุณเพื่อดูปฏิกิริยาหรือไม่?",
+    options: ["ไม่ใช่", "ใช่"], // Risk: ไม่ใช่
+    scoringType: "qchat_standard",
+    maxPoints: 1,
   },
 ];
 
 export const qchatQuestionnaire: QChatSeedQuestionnaire = {
-  slug: "qchat",
-  title: "Q-CHAT-10",
+  slug: "qchat-10-binary",
+  title: "Q-CHAT-10 (Adapted)",
   description:
-    "แบบคัดกรองออทิสติกสำหรับเด็กเล็ก 10 ข้อ (Quantitative Checklist for Autism in Toddlers)",
+    "แบบคัดกรองภาวะออทิสติก Q-CHAT-10 ฉบับปรับปรุงตัวเลือก (ใช่/ไม่ใช่)",
   type: "qchat",
-  maxScore: 20,
+  maxScore: 10,
   questions: qChatQuestions.map((q, index) => ({
     ...q,
     displayOrder: index + 1,

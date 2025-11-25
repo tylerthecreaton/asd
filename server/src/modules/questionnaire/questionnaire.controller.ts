@@ -167,13 +167,28 @@ export const submitQuestionnaire = async (
       }
 
       let points = 0;
-      if (question.scoringType === "qchat") {
-        // Q-CHAT scoring: reverse scoring - index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
-        points = options.length - 1 - answer;
+      if (question.scoringType === "qchat_standard") {
+        // Q-CHAT Standard scoring: index 0 (ไม่ใช่) = 1 point (risk), index 1 (ใช่) = 0 points
+        points = answer === 0 ? 1 : 0;
         score += points;
 
-        // Flag questions with higher scores (1 or 2 points)
-        if (points >= 1) {
+        if (points === 1) {
+          flagged.push(question.text);
+        }
+      } else if (question.scoringType === "qchat_reverse") {
+        // Q-CHAT Reverse scoring: index 1 (ใช่) = 1 point (risk), index 0 (ไม่ใช่) = 0 points
+        points = answer === 1 ? 1 : 0;
+        score += points;
+
+        if (points === 1) {
+          flagged.push(question.text);
+        }
+      } else if (question.scoringType === "qchat") {
+        // Legacy Q-CHAT scoring (for backward compatibility)
+        points = answer === 0 ? 1 : 0;
+        score += points;
+
+        if (points === 1) {
           flagged.push(question.text);
         }
       } else {
@@ -199,10 +214,10 @@ export const submitQuestionnaire = async (
     // Determine risk level based on questionnaire type
     let riskLevel: "low" | "medium" | "high";
     if (questionnaire.type === "qchat") {
-      // Q-CHAT-10 risk levels (maxScore = 20): Low (0-6), Medium (7-13), High (14-20)
-      if (score <= 6) {
+      // Q-CHAT-10 risk levels with binary scoring (maxScore = 10): Low (0-3), Medium (4-6), High (7-10)
+      if (score <= 3) {
         riskLevel = "low";
-      } else if (score <= 13) {
+      } else if (score <= 6) {
         riskLevel = "medium";
       } else {
         riskLevel = "high";

@@ -71,11 +71,19 @@ class _QuestionCardState extends State<QuestionCard> {
               final option = widget.question.options[index];
               final isSelected = _selectedAnswer == index;
 
-              // Calculate points for Q-CHAT questions (reverse scoring)
+              // Calculate points for Q-CHAT questions
               String pointsText = '';
-              if (widget.question.scoringType == 'qchat') {
-                // Q-CHAT uses reverse scoring: index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
-                final points = widget.question.options.length - 1 - index;
+              if (widget.question.scoringType == 'qchat_standard') {
+                // Standard: index 0 (ไม่ใช่) = 1 point
+                final points = index == 0 ? 1 : 0;
+                pointsText = ' ($points คะแนน)';
+              } else if (widget.question.scoringType == 'qchat_reverse') {
+                // Reverse: index 1 (ใช่) = 1 point
+                final points = index == 1 ? 1 : 0;
+                pointsText = ' ($points คะแนน)';
+              } else if (widget.question.scoringType == 'qchat') {
+                // Legacy: index 0 (ไม่ใช่) = 1 point
+                final points = index == 0 ? 1 : 0;
                 pointsText = ' ($points คะแนน)';
               }
 

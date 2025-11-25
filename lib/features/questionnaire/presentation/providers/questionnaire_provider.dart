@@ -96,9 +96,15 @@ class QuestionnaireController
       return 0;
     }
 
-    if (question.scoringType == 'qchat') {
-      // Q-CHAT scoring: reverse scoring - index 0 = 2 points, index 1 = 1 point, index 2 = 0 points
-      return question.options.length - 1 - answerIndex;
+    if (question.scoringType == 'qchat_standard') {
+      // Q-CHAT Standard scoring: index 0 (ไม่ใช่) = 1 point (risk)
+      return answerIndex == 0 ? 1 : 0;
+    } else if (question.scoringType == 'qchat_reverse') {
+      // Q-CHAT Reverse scoring: index 1 (ใช่) = 1 point (risk)
+      return answerIndex == 1 ? 1 : 0;
+    } else if (question.scoringType == 'qchat') {
+      // Legacy Q-CHAT scoring (for backward compatibility)
+      return answerIndex == 0 ? 1 : 0;
     } else {
       // Standard binary scoring
       return answerIndex != question.correctAnswerIndex ? 1 : 0;
@@ -145,23 +151,7 @@ class QuestionnaireController
         ? questionnaire.slug
         : questionnaire.id;
 
-    // Convert responses to include points for Q-CHAT
-    final responsesWithPoints = currentState.responses.map((response) {
-      int points = response.points;
-      if (questionnaire.type == 'qchat' && points == 0) {
-        // Calculate points for Q-CHAT if not already calculated
-        final question = questionnaire.questions.firstWhere(
-          (q) => q.id == response.questionId,
-        );
-        points = response.answerIndex; // Q-CHAT scoring: 0, 1, 2
-      }
-      return {
-        'questionId': response.questionId,
-        'answerIndex': response.answerIndex,
-        'points': points,
-      };
-    }).toList();
-
+    // Submit responses with calculated points
     final result = await _repository.submitResponses(
       identifier: identifier,
       responses: currentState.responses,

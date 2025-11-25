@@ -96,8 +96,8 @@ class PdfService {
     pw.Font regular,
     pw.Font bold,
   ) {
-    // Calculate max possible score (totalQuestions * 2 for Q-CHAT)
-    final maxScore = result.totalQuestions * 2;
+    // Calculate max possible score (totalQuestions * 1 for binary Q-CHAT)
+    final maxScore = result.totalQuestions;
     final percentage = ((result.score / maxScore) * 100).round();
 
     return pw.Column(
@@ -110,7 +110,7 @@ class PdfService {
           style: pw.TextStyle(font: regular, fontSize: 12),
         ),
         pw.Text(
-          'Risk thresholds: Low (0-6), Medium (7-13), High (14+)',
+          'Risk thresholds: Low (0-3), Medium (4-6), High (7-10)',
           style: pw.TextStyle(
             font: regular,
             fontSize: 10,

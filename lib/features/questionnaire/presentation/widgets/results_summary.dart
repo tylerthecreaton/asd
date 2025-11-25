@@ -108,8 +108,8 @@ class _ScoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Calculate max possible score (totalQuestions * 2 for Q-CHAT)
-    final maxScore = result.totalQuestions * 2;
+    // Calculate max possible score (totalQuestions * 1 for binary Q-CHAT)
+    final maxScore = result.totalQuestions;
     final percentage = ((result.score / maxScore) * 100).round();
 
     return Card(
@@ -130,7 +130,7 @@ class _ScoreCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Risk thresholds: Low (0-6), Medium (7-13), High (14+)',
+                    'Risk thresholds: Low (0-3), Medium (4-6), High (7-10)',
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -159,8 +159,8 @@ class _ScoreCard extends StatelessWidget {
   }
 
   Color _getScoreColor(int score) {
-    if (score <= 6) return Colors.green;
-    if (score <= 13) return Colors.orange;
+    if (score <= 3) return Colors.green;
+    if (score <= 6) return Colors.orange;
     return Colors.red;
   }
 }

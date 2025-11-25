@@ -67,7 +67,7 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              questionnaire?.type == 'qchat'
+                              questionnaire?.type.contains('qchat') ?? false
                                   ? Icons.quiz_outlined
                                   : Icons.assignment,
                               size: 64,
@@ -92,7 +92,8 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            if (questionnaire?.type == 'qchat') ...[
+                            if (questionnaire?.type.contains('qchat') ??
+                                false) ...[
                               const SizedBox(height: 16),
                               Container(
                                 padding: const EdgeInsets.all(12),
@@ -116,7 +117,7 @@ class QuestionnaireIntroPage extends ConsumerWidget {
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
-                                          'ระดับความเสี่ยง: Low (0-15), Medium (16-30), High (31-50)',
+                                          'ระดับความเสี่ยง: Low (0-3), Medium (4-6), High (7-10)',
                                           style: theme.textTheme.bodyMedium
                                               ?.copyWith(
                                                 fontWeight: FontWeight.w500,

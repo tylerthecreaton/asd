@@ -12,8 +12,11 @@ class QuestionnaireProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = currentQuestion / totalQuestions;
-    final percentage = (progress * 100).round();
+    // Prevent division by zero and handle edge cases
+    final progress = totalQuestions > 0
+        ? currentQuestion / totalQuestions
+        : 0.0;
+    final percentage = (progress * 100).round().clamp(0, 100);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
@@ -36,11 +39,16 @@ class QuestionnaireProgressIndicator extends StatelessWidget {
                 'ความคืบหน้า',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.8),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -56,7 +64,7 @@ class QuestionnaireProgressIndicator extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Progress dots
           Row(
             children: List.generate(
@@ -77,9 +85,9 @@ class QuestionnaireProgressIndicator extends StatelessWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Step indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,13 +95,17 @@ class QuestionnaireProgressIndicator extends StatelessWidget {
               Text(
                 'ข้อที่ $currentQuestion จาก $totalQuestions',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
               Text(
                 _getProgressText(progress),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
                   fontStyle: FontStyle.italic,
                 ),
               ),
